@@ -36,8 +36,19 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: 'Bodega i
         <p>{t('La bodega de Cubo Park ocupa la finca filial FFM-IB-5, en el centro del condominio. Su nave principal ofrece un piso amplio y libre, rodeado por mezzanines metálicos en dos niveles con pasarelas y barandas de vidrio que conectan las áreas de oficina.', 'Cubo Park’s warehouse sits on lot FFM-IB-5, at the center of the condominium. The main hall offers a wide, open floor surrounded by two levels of steel mezzanines with glass-railed walkways linking the office areas.')}</p>
         <p>{t('Incluye oficinas con cerramiento de vidrio, recepción, áreas de servicio, cortinas de acceso vehicular, ventilación natural por celosías y lucernarios en la cubierta. Funciona para centro de distribución, manufactura liviana, showroom o sede corporativa con operación.', 'It includes glass-enclosed offices, a reception, service areas, roll-up vehicle doors, natural ventilation through louvers and roof skylights. It suits a distribution center, light manufacturing, a showroom or a corporate headquarters with operations.')}</p>
       </div></div>
-      <div class="block"><h2>{t('Recorrido panorámico', 'Panoramic walkthrough')}</h2><p class="muted" style="font-size:.88rem">{t('Arrastre para recorrer la nave.', 'Drag to look around the hall.')}</p>
-        <div class="pano"><img src="/img/nave-panoramica.webp" width="2000" height="600" alt={t('Panorámica interior de la nave', 'Panoramic view of the hall')} loading="lazy" decoding="async" /></div></div>
+      <div class="block"><h2>{t('Recorrido panorámico', 'Panoramic walkthrough')}</h2>
+        <p class="muted" style="font-size:.88rem">{t('Arrastre la imagen para recorrer la nave. En el celular también puede moverla girando el teléfono.', 'Drag the image to look around the hall. On a phone you can also move it by turning your device.')}</p>
+        <div class="pano-wrap">
+          <div class="pano"><img src="/img/nave-pano.webp" srcset="/img/nave-pano-sm.webp 1400w, /img/nave-pano.webp 2576w" sizes="(max-width:700px) 900px, 1800px" width="2576" height="934" alt={t('Panorámica interior de la nave de la bodega', 'Panoramic view of the warehouse hall')} loading="lazy" decoding="async" draggable="false" /></div>
+          <div class="pano-hint" aria-hidden="true">
+            <svg viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6 8 12l6 6M34 6l6 6-6 6M8 12h32"/></svg>
+            <span class="pano-hint-d">{t('Arrastre para recorrer', 'Drag to explore')}</span><span class="pano-hint-m">{t('Deslice para recorrer', 'Swipe to explore')}</span>
+          </div>
+          <button class="pano-gyro" type="button" hidden data-on={t('Giroscopio activo', 'Motion on')} data-off={t('Mover con el teléfono', 'Move with your phone')}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2M3 9c-1 2-1 4 0 6M21 9c1 2 1 4 0 6"/></svg>
+            <span>{t('Mover con el teléfono', 'Move with your phone')}</span>
+          </button>
+        </div></div>
       <div class="block"><h2>{t('Especificaciones', 'Specifications')}</h2>
         <ul class="feat" style="margin-top:0">
           <li><Icon name="cube" />{t('Nave de estructura metálica de gran luz', 'Long-span steel-frame hall')}</li>
