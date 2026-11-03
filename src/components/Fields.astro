@@ -1,0 +1,20 @@
+---
+// Dos campos de precio: alquilar la bodega o comprar todo el proyecto.
+import { BUNDLE, WAREHOUSE } from '../data/lots';
+import { useT, href, money, m2, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = useT(lang);
+---
+  <section class="fields" aria-label={t('Alquilar o comprar', 'Lease or buy')}>
+    <div class="field-p a">
+      <div><h2>{t('Alquilar la bodega', 'Lease the warehouse')}</h2><p class="for">{t('Para la empresa que necesita operar ya, sin comprar terreno.', 'For the company that needs to operate now, without buying land.')}</p></div>
+      <p class="incl">{t('5,500 m² a $8 por m², más IVA del 13% y $1 por m² de mantenimiento del condominio. Incluye mezzanines, oficinas, recepción y estacionamientos.', '5,500 m² at $8 per m², plus 13% VAT and $1 per m² of condominium maintenance. Includes mezzanines, offices, reception and parking.')}</p>
+      <div class="fp-foot"><div class="price num">{money(WAREHOUSE.total)}<small>{t('/mes', '/month')}</small></div><a class="btn btn-ink" href={href('contact', lang) + '?interes=bodega-alquiler'}>{t('Consultar alquiler', 'Ask about leasing')}</a></div>
+    </div>
+    <div class="field-p b">
+      <div><h2>{t('Comprar todo el proyecto', 'Buy the entire project')}</h2><p class="for">{t('Para el inversionista que quiere el condominio completo.', 'For the investor who wants the whole condominium.')}</p></div>
+      <p class="incl">{t(`Las cinco fincas filiales: la bodega con su terreno, la finca con casa frente a la calle y los tres lotes del fondo. ${m2(BUNDLE.land)} de terreno y ${m2(BUNDLE.built, 0)} construidos. El precio es la suma exacta de los cinco.`, `All five lots: the warehouse with its land, the street-front lot with its house and the three rear lots. ${m2(BUNDLE.land)} of land and ${m2(BUNDLE.built, 0)} built. The price is the exact sum of the five.`)}</p>
+      <div class="fp-foot"><div class="price num">{money(BUNDLE.price)}</div><a class="btn btn-paper" href={href('contact', lang) + '?interes=todo'}>{t('Consultar compra', 'Ask about buying')}</a></div>
+    </div>
+  </section>
+

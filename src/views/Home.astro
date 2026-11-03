@@ -1,99 +1,230 @@
 ---
 import Base from '../layouts/Base.astro';
 import Img from '../components/Img.astro';
-import Icon from '../components/Icon.astro';
 import Arrow from '../components/Arrow.astro';
-import Plan from '../components/Plan.astro';
-import LotCard from '../components/LotCard.astro';
-import Bundle from '../components/Bundle.astro';
-import { GAL, LAND_TOTAL } from '../data/lots';
-import { useT, href, money, type Lang } from '../i18n';
+import Planner from '../components/Planner.astro';
+import Fields from '../components/Fields.astro';
+import { LOTS, ALL_IDS, GAL, CAP, BUNDLE, WAREHOUSE, ppm, landValue, houseValue } from '../data/lots';
+import { SITE } from '../data/site';
+import { useT, href, money, m2, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
-const strip = GAL.filter((g) => ['bodega-aerea', 'nave-mezzanine', 'oficina-vidrio', 'bodega-calle', 'nave-oficinas', 'calle-interna', 'escalera', 'bodega-fachada'].includes(g[0]));
+const w = LOTS.ib5;
+const stageImg: Record<string, string> = { hero: 'aerial-panorama', ib4: 'casa-ib4', ib5: 'bodega-aerea-3', ib6: 'terreno-aereo', ib7: 'terreno-aereo-2', ib8: 'calle-interna-2' };
+const lotWhat = (k: string) => {
+  const v = LOTS[k];
+  if (v.kind === 'house') return t(`Terreno y casa frente a la calle principal`, `Land and house on the main street`);
+  if (v.kind === 'warehouse') return t('Bodega de 5,500 m² con su terreno', '5,500 m² warehouse with its land');
+  return t(`Lote del fondo, detrás de la bodega`, `Rear lot, behind the warehouse`);
+};
+const drag: [string, string[]][] = [
+  ['tall', ['nave-oficinas']], ['pair', ['bodega-aerea', 'oficina-vidrio']], ['wide', ['nave-panoramica']],
+  ['pair', ['pasarela', 'recepcion']], ['tall', ['escalera']], ['wide', ['entorno-aereo']],
+  ['pair', ['bodega-fachada', 'oficina-amplia']], ['tall', ['nave-escaleras']], ['wide', ['bodega-calle']],
+];
+const dragCount = drag.reduce((s, [, a]) => s + a.length, 0);
+const commons: [string, string][] = [
+  [t('Calle interna de acceso', 'Internal access road'), 'ACC'], [t('Planta de tratamiento', 'Treatment plant'), 'PT'],
+  [t('Laguna de retención', 'Retention pond'), 'LR'], [t('Zona de protección del río', 'River buffer zone'), 'ZPR'],
+  [t('Zonas verdes', 'Green areas'), 'ZV'], [t('Estacionamientos', 'Parking'), 'EST'],
+  [t('Caseta de guarda', 'Guard booth'), 'C'], [t('Cuarto de mantenimiento', 'Maintenance room'), 'M'],
+];
 ---
-<Base lang={lang} route="home" image="vista-lateral"
+<Base lang={lang} route="home" home
   title={t('Cubo Park Condominio | Lotes industriales y bodega en Alajuela', 'Cubo Park Condominio | Industrial lots & warehouse in Alajuela, Costa Rica')}
-  description={t('Lotes industriales con título propio y bodega de 5,500 m² en venta o alquiler en San Rafael de Alajuela, cerca de Lindora y Ruta 27. Precios en USD.', 'Independently titled industrial lots and a 5,500 m² warehouse for sale or lease in San Rafael, Alajuela, near Lindora and Route 27. Prices in USD.')}>
+  description={t('Cuatro lotes industriales con título propio y una bodega de 5,500 m² en venta o alquiler en San Rafael de Alajuela, cerca de Lindora y Ruta 27. Precios en USD.', 'Four independently titled industrial lots and a 5,500 m² warehouse for sale or lease in San Rafael, Alajuela, near Lindora and Route 27. Prices in USD.')}>
 
-  <section class="hero">
-    <div class="hero-bg"><Img name="aerial-panorama" alt={t('Vista aérea de Cubo Park en San Rafael de Alajuela', 'Aerial view of Cubo Park in San Rafael, Alajuela')} eager /></div>
-    <div class="wrap">
-      <span class="eyebrow" style="color:var(--sand)">{t('Condominio industrial · San Rafael, Alajuela', 'Industrial condominium · San Rafael, Alajuela')}</span>
-      <h1 class="h-xl" set:html={t('Espacio para que su operación <b>crezca.</b>', 'Room for your operation <b>to grow.</b>')} />
-      <p class="lead">{t('Lotes industriales con título propio y una bodega de 5,500 m² lista para operar, dentro de un condominio con calle interna, planta de tratamiento y zonas verdes. A minutos de Lindora y la Ruta 27.', 'Independently titled industrial lots and a 5,500 m² warehouse ready to operate, inside a condominium with its own internal road, treatment plant and green areas. Minutes from Lindora and Route 27.')}</p>
-      <div class="hero-ctas">
-        <a class="btn btn-red" href={href('availability', lang)}>{t('Ver disponibilidad', 'View availability')} <Arrow /></a>
-        <a class="btn btn-ghost" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a>
+  <!-- Hero + fincas: el escenario fijo -->
+  <div class="hero" data-stage-root>
+    <aside class="stage" aria-hidden="true">
+      <div class="stage-in">
+        {Object.entries(stageImg).map(([k, n], i) => <img class={i === 0 ? 'on drift' : undefined} data-k={k} src={`/img/${n}.webp`} srcset={`/img/${n}-sm.webp 900w, /img/${n}.webp 2000w`} sizes="(max-width:900px) 100vw, 47vw" width="2000" height="1333" alt="" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} />)}
+        <span class="cap" data-cap hidden></span>
       </div>
-      <div class="stats num">
-        <div class="stat"><div class="v">5,500<small>m²</small></div><div class="k">{t('Bodega construida', 'Built warehouse')}</div></div>
-        <div class="stat"><div class="v">4</div><div class="k">{t('Fincas filiales en venta', 'Lots for sale')}</div></div>
-        <div class="stat"><div class="v">{Math.round(LAND_TOTAL).toLocaleString('en-US')}<small>m²</small></div><div class="k">{t('De terreno en 4 lotes', 'Of land across 4 lots')}</div></div>
-        <div class="stat"><div class="v">$250<small>/m²</small></div><div class="k">{t('Lotes del fondo · 6, 7 y 8', 'Rear lots · 6, 7 & 8')}</div></div>
+    </aside>
+    <div class="hero-col">
+      <section class="copy" data-stage="hero">
+        <h1 class="name" data-scale-name><span>{t('Condominio industrial en San Rafael de Alajuela', 'Industrial condominium in San Rafael, Alajuela')}</span>Cubo Park</h1>
+        <div class="lede">
+          <p class="rise">{t('Cuatro lotes con título propio y una bodega de 5,500 m², en venta o alquiler.', 'Four independently titled lots and a 5,500 m² warehouse, for sale or lease.')}</p>
+          <div class="facts rise" style="--i:1">
+            <span><b>{t('5 fincas', '5 lots')}</b> {t('filiales', 'available')}</span>
+            <span><b class="num">{m2(BUNDLE.land, 0)}</b> {t('de terreno', 'of land')}</span>
+            <span>{t('Desde', 'From')} <b class="num">{money(LOTS.ib8.price)}</b></span>
+          </div>
+          <div class="acts rise" style="--i:2">
+            <a class="btn" href="#fincas">{t('Ver las fincas', 'See the lots')} <Arrow /></a>
+            <a class="btn btn-paper" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="lots-sec" id="fincas" aria-labelledby="fincas-h">
+        <div class="lots-intro">
+          <h2 id="fincas-h" class="h2 rise">{t('Cinco fincas, cada una con su título', 'Five lots, each with its own title')}</h2>
+          <p class="rise" style="--i:1">{t('Cubo Park está inscrito en régimen de condominio. Cada finca filial tiene plano catastrado y folio real propios: se compra, se financia o se vende por separado.', 'Cubo Park is registered as a condominium. Each lot has its own cadastral survey and title, so it can be bought, financed or sold on its own.')}</p>
+        </div>
+        <div class="lots">
+          {ALL_IDS.map((k) => {
+            const v = LOTS[k];
+            return (
+              <article class="lot-row" id={`f-${k}`} data-stage={k}>
+                <img class="mobile-pic" src={`/img/${stageImg[k]}-sm.webp`} width="900" height="600" alt={v.code} loading="lazy" decoding="async" />
+                <h3 class="code rise"><a href={href(`lot:${k}`, lang)}>{v.code}</a></h3>
+                <p class="what rise" style="--i:1">{lotWhat(k)}</p>
+                <dl class="num rise" style="--i:2">
+                  {v.kind === 'warehouse' && (<>
+                    <dt>{t('Construcción', 'Building')}</dt><dd>{m2(v.built!, 0)}</dd>
+                    <dt>{t('Terreno según catastro', 'Land per cadastral survey')}</dt><dd>{m2(v.land!)}</dd>
+                    <dt>{t('Alquiler', 'Lease')}</dt><dd>{money(WAREHOUSE.total)} {t('al mes', 'a month')}</dd>
+                    <dt class="total">{t('Precio global, terreno y bodega', 'Package price, land and warehouse')}</dt><dd class="total">{money(v.price)}</dd>
+                  </>)}
+                  {v.kind === 'house' && (<>
+                    <dt>{t('Terreno', 'Land')} {m2(v.total!)} × {money(ppm(v))}</dt><dd>{money(landValue(v))}</dd>
+                    <dt>{t('Casa construida', 'Existing house')}</dt><dd>{money(houseValue(v))}</dd>
+                    <dt class="total">{t('Total terreno y casa', 'Total land and house')}</dt><dd class="total">{money(v.price)}</dd>
+                  </>)}
+                  {v.kind === 'lot' && (<>
+                    <dt>{t('Finca filial', 'Lot')}</dt><dd>{m2(v.lot!)}</dd>
+                    <dt>{t(`Zona verde ${v.zv} asignada`, `Assigned green zone ${v.zv}`)}</dt><dd>{m2(v.green!)}</dd>
+                    <dt>{t('Área total', 'Total area')} × {money(ppm(v))}/m²</dt><dd>{m2(v.total!)}</dd>
+                    <dt class="total">{t('Precio', 'Price')}</dt><dd class="total">{money(v.price)}</dd>
+                  </>)}
+                </dl>
+                <div class="more rise" style="--i:3">
+                  <a class="link" href={href(`lot:${k}`, lang)}>{t('Ver la ficha completa', 'See full details')}</a>
+                  <a class="link" href="#planner" data-add={k}>{t('Sumar al plano', 'Add to the plan')}</a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- La cosa viva: arme su compra -->
+  <section class="planner" id="planner" aria-labelledby="planner-h">
+    <div class="planner-head">
+      <h2 id="planner-h" class="rise">{t('Arme su compra', 'Build your purchase')}</h2>
+      <p class="rise" style="--i:1">{t('Toque las fincas que le interesan. Sumamos el terreno y el precio de su selección, y se la enviamos al formulario de contacto.', 'Tap the lots you are interested in. We add up the land and the price of your selection, and carry it to the contact form.')}</p>
+    </div>
+    <Planner lang={lang} mode="select" />
+  </section>
+
+  <!-- La bodega: plato cuadrado -->
+  <section class="plate" aria-labelledby="bodega-h">
+    <div class="plate-pic"><Img name="nave-mezzanine" alt={t('Interior de la bodega: nave libre, mezzanine y oficinas en segundo nivel', 'Warehouse interior: open hall, mezzanine and second-floor offices')} sizes="(max-width:900px) 100vw, 50vw" cls="rise" /></div>
+    <div class="plate-txt">
+      <div class="tabs" role="tablist" aria-label={t('Bodega FFM-IB-5', 'Warehouse FFM-IB-5')}>
+        <button role="tab" id="tb-rent" aria-controls="tp-rent" aria-selected="true">{t('Alquiler', 'Lease')}</button>
+        <button role="tab" id="tb-sale" aria-controls="tp-sale" aria-selected="false" tabindex="-1">{t('Venta', 'Sale')}</button>
+        <button role="tab" id="tb-spec" aria-controls="tp-spec" aria-selected="false" tabindex="-1">{t('Ficha', 'Specs')}</button>
+      </div>
+      <div class="plate-body">
+        <h2 id="bodega-h" class="rise">{t('Una bodega de 5,500 m² lista para operar', 'A 5,500 m² warehouse ready to operate')}</h2>
+        <div role="tabpanel" id="tp-rent" aria-labelledby="tb-rent">
+          <div class="fig num">{money(WAREHOUSE.total)}<small>{t('al mes, todo incluido', 'a month, all included')}</small></div>
+          <div class="rows num" style="margin-top:24px">
+            <div><span>{t('Renta, 5,500 m² × $8', 'Rent, 5,500 m² × $8')}</span><span>{money(WAREHOUSE.rent)}</span></div>
+            <div><span>{t('IVA 13%', 'VAT 13%')}</span><span>{money(WAREHOUSE.iva)}</span></div>
+            <div><span>{t('Mantenimiento, $1/m²', 'Maintenance, $1/m²')}</span><span>{money(WAREHOUSE.fee)}</span></div>
+          </div>
+        </div>
+        <div role="tabpanel" id="tp-sale" aria-labelledby="tb-sale" hidden>
+          <div class="fig num">{money(w.price)}<small>{t('precio global, terreno y bodega', 'package price, land and warehouse')}</small></div>
+          <p style="margin-top:24px">{t('Incluye los 4,230.89 m² de terreno de la finca FFM-IB-5 y la bodega de 5,500 m² con sus mezzanines, oficinas y estacionamientos.', 'Includes the 4,230.89 m² of land of lot FFM-IB-5 and the 5,500 m² warehouse with its mezzanines, offices and parking.')}</p>
+        </div>
+        <div role="tabpanel" id="tp-spec" aria-labelledby="tb-spec" hidden>
+          <ul class="ticks">
+            <li>{t('Nave de estructura metálica con piso libre', 'Steel-frame hall with an open floor')}</li>
+            <li>{t('Mezzanines en dos niveles con pasarelas', 'Two mezzanine levels with walkways')}</li>
+            <li>{t('Oficinas con vidrio, recepción y servicios', 'Glass offices, reception and services')}</li>
+            <li>{t('Cortinas enrollables y estacionamientos', 'Roll-up doors and parking')}</li>
+            <li>{t('Lucernarios y ventilación por celosías', 'Skylights and louvre ventilation')}</li>
+            <li>{t('Red y gabinetes contra incendio', 'Fire main and hose cabinets')}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="plate-acts">
+        <a class="btn btn-ink" href={href('warehouse', lang)}>{t('Ver la bodega', 'See the warehouse')}</a>
+        <a class="btn btn-quiet" href={href('contact', lang) + '?interes=bodega'}>{t('Agendar visita', 'Book a tour')}</a>
       </div>
     </div>
   </section>
 
-  <section class="sec light"><div class="wrap split2">
-    <div class="frame rv"><Img name="bodega-acceso" alt={t('Acceso principal de la bodega', 'Warehouse main entrance')} sizes="(max-width:900px) 100vw, 50vw" />
-      <div class="tag"><div class="v num">FFM-IB-5</div><div class="k">{t('Venta o alquiler', 'Sale or lease')}</div></div></div>
-    <div class="rv"><span class="eyebrow">{t('El condominio', 'The condominium')}</span>
-      <h2 class="h-l" style="margin-top:22px" set:html={t('Infraestructura terminada. <b>Solo falta su empresa.</b>', 'Infrastructure in place. <b>Your company is next.</b>')} />
-      <p class="lead" style="margin-top:24px">{t('Cubo Park es un condominio industrial y de bodegas de fincas filiales. Cada finca tiene su propio plano catastrado y se compra con título independiente, con el respaldo de áreas comunes ya construidas.', 'Cubo Park is an industrial and warehouse condominium made up of independent lots. Each lot has its own cadastral survey and is sold with its own title, backed by common areas that are already built.')}</p>
-      <ul class="feat">
-        <li><Icon name="road" />{t('Calle interna asfaltada con acceso vehicular', 'Paved internal road with vehicle access')}</li>
-        <li><Icon name="drop" />{t('Planta de tratamiento y laguna de retención', 'Treatment plant and retention pond')}</li>
-        <li><Icon name="doc" />{t('Uso industrial, bodegas, ofibodegas y oficinas', 'Zoned for industry, warehouses, flex space and offices')}</li>
-        <li><Icon name="leaf" />{t('Zonas verdes y protección del río Bermúdez', 'Green areas and Bermúdez River buffer')}</li>
-      </ul>
-      <a class="link-arrow" style="margin-top:36px" href={href('project', lang)}>{t('Conocer el proyecto', 'About the project')} <Arrow /></a>
+  <!-- Ya construido: campo rojo -->
+  <section class="built" aria-labelledby="built-h">
+    <h2 id="built-h">{t('Ya construido', 'Already built')}</h2>
+    <div class="built-rows">
+      <article class="built-row">
+        <h3 class="rise">{t('Calle interna y accesos', 'Internal road and access')}</h3>
+        <div class="pair"><Img name="calle-interna" alt={t('Calle interna asfaltada del condominio', 'Paved internal road of the condominium')} sizes="200px" w={2000} h={1333} cls="rise" />
+          <ul class="rise" style="--i:1"><li>{t('Calle asfaltada con cordón y caño', 'Paved road with curbs and gutters')}</li><li>{t('Acceso desde la calle pública', 'Access from the public street')}</li><li>{t('Llega hasta el último lote', 'Runs to the last lot')}</li><li>{t('Caseta de guarda en la entrada', 'Guard booth at the entrance')}</li></ul></div>
+      </article>
+      <article class="built-row">
+        <h3 class="rise">{t('Agua tratada y retenida', 'Water treated and retained')}</h3>
+        <div class="pair"><Img name="terreno-aereo-2" alt={t('Vista aérea con la laguna de retención al fondo', 'Aerial view with the retention pond at the back')} sizes="200px" cls="rise" />
+          <ul class="rise" style="--i:1"><li>{t('Planta de tratamiento común', 'Shared treatment plant')}</li><li>{t('Laguna de retención impermeabilizada', 'Lined retention pond')}</li><li>{t('En el extremo norte del terreno', 'At the north end of the land')}</li><li>{t('Cuarto de mantenimiento', 'Maintenance room')}</li></ul></div>
+      </article>
+      <article class="built-row">
+        <h3 class="rise">{t('Verde y río', 'Green areas and river')}</h3>
+        <div class="pair"><Img name="bodega-jardin" alt={t('Zonas verdes frente a la bodega', 'Green areas in front of the warehouse')} sizes="200px" cls="rise" />
+          <ul class="rise" style="--i:1"><li>{t('Zonas verdes entre fincas', 'Green areas between lots')}</li><li>{t('Franja de 15 m de protección del río Bermúdez', '15 m buffer along the Bermúdez River')}</li><li>{t('Árboles maduros en la propiedad', 'Mature trees on the property')}</li></ul></div>
+      </article>
     </div>
-  </div></section>
-
-  <section class="paths">
-    <a class="path" href={href('warehouse', lang)}><Img name="nave-panoramica" alt={t('Interior de la bodega', 'Warehouse interior')} sizes="(max-width:820px) 100vw, 50vw" />
-      <div class="in"><span class="eyebrow" style="color:var(--sand)">{t('Para operar', 'To operate')}</span>
-        <h2 class="h-l" set:html={t('Bodega de <b>5,500 m²</b>', 'A <b>5,500 m²</b> warehouse')} />
-        <p class="price">{t('Alquiler desde $8/m² · Venta ', 'Lease from $8/m² · Sale ')}{money(5600000)}</p>
-        <span class="link-arrow">{t('Ver la bodega', 'See the warehouse')} <Arrow /></span></div></a>
-    <a class="path" href={href('availability', lang)}><Img name="entorno-aereo" alt={t('Lotes industriales disponibles', 'Available industrial lots')} sizes="(max-width:820px) 100vw, 50vw" />
-      <div class="in"><span class="eyebrow" style="color:var(--sand)">{t('Para invertir', 'To invest')}</span>
-        <h2 class="h-l" set:html={t('Lotes desde <b>4,154 m²</b>', 'Lots from <b>4,154 m²</b>')} />
-        <p class="price">{t('Lotes del fondo desde', 'Rear lots from')} {money(1038532)} · $250/m² · {t('Frente a calle: $350/m² + casa', 'Street front: $350/m² + house')}</p>
-        <span class="link-arrow">{t('Ver lotes', 'See the lots')} <Arrow /></span></div></a>
   </section>
 
-  <section class="sec dark"><div class="wrap">
-    <div class="sec-head split"><div><span class="eyebrow">{t('Master plan', 'Master plan')}</span>
-      <h2 class="h-l" style="margin-top:22px" set:html={t('Elija su finca <b>sobre el plano.</b>', 'Choose your lot <b>on the plan.</b>')} /></div>
-      <p class="lead">{t('Cinco fincas filiales disponibles sobre la fotografía aérea real del condominio. Áreas tomadas de los planos catastrados.', 'Five lots available, drawn over a real aerial photo of the condominium. Areas taken from the cadastral surveys.')}</p></div>
-    <Plan lang={lang} selected="ib7" />
-  </div></section>
+  <!-- Dos formas de entrar -->
+  <Fields lang={lang} />
 
-  <section class="sec light"><div class="wrap">
-    <div class="sec-head split"><div><span class="eyebrow">{t('Disponibilidad', 'Availability')}</span>
-      <h2 class="h-l" style="margin-top:22px" set:html={t('Fincas <b>disponibles</b>', 'Available <b>lots</b>')} /></div>
-      <div style="justify-self:end"><a class="btn btn-line" href={href('availability', lang)}>{t('Comparar todas', 'Compare all')} <Arrow /></a></div></div>
-    <div class="cards">{['ib5', 'ib6', 'ib7', 'ib8'].map((id) => <LotCard id={id} lang={lang} />)}</div>
-  </div></section>
-
-  <Bundle lang={lang} />
-
-  <section class="sec white">
-    <div class="wrap"><div class="sec-head split"><div><span class="eyebrow">{t('Galería', 'Gallery')}</span>
-      <h2 class="h-l" style="margin-top:22px" set:html={t('Recorra <b>el proyecto</b>', 'Walk <b>the project</b>')} /></div>
-      <div style="justify-self:end"><a class="link-arrow" href={href('gallery', lang)}>{t('Ver galería completa', 'Full gallery')} <Arrow /></a></div></div></div>
-    <div class="wrap"><div class="gal-strip">
-      {strip.map(([n, , es, en]) => <figure data-lb="home" data-full={`/img/${n}.webp`} data-cap={t(es, en)}><Img name={n} alt={t(es, en)} sizes="34vw" /></figure>)}
-    </div></div>
+  <!-- El condominio, en datos -->
+  <section class="facts-sec" aria-labelledby="cond-h">
+    <div class="fs-row first">
+      <dl class="fs-side">
+        <div><dt>{t('Finca matriz', 'Parent property')}</dt><dd class="num">67,111.58 m²</dd></div>
+        <div><dt>{t('Régimen', 'Regime')}</dt><dd>{t('Propiedad en condominio', 'Condominium property')}</dd></div>
+        <div><dt>{t('Planos', 'Surveys')}</dt><dd>{t('Catastrados, sellados por el CFIA en 2018', 'Registered, sealed by the CFIA in 2018')}</dd></div>
+      </dl>
+      <div class="fs-main">
+        <h2 id="cond-h">{t('El condominio', 'The condominium')}</h2>
+        <p class="big">{t('Una franja larga entre la calle Potrerillos y el río Bermúdez, con todo lo común ya construido.', 'A long strip from Calle Potrerillos to the Bermúdez River, with everything shared already built.')}</p>
+        <p style="max-width:60ch">{t('La finca con casa da a la calle pública y los tres lotes quedan al fondo, sobre la calle interna. Acceso, tratamiento de aguas, retención pluvial y zonas verdes se administran en común.', 'The lot with the house faces the public street and the three lots lie at the back, along the internal road. Access, wastewater treatment, stormwater retention and green areas are managed in common.')}</p>
+      </div>
+    </div>
+    <div class="fs-row">
+      <span class="fs-word">{t('Según los planos', 'Per the surveys')}</span>
+      <div class="fs-lists num">
+        <div><h3>{t('Fincas filiales', 'Lots')}</h3><ul>{ALL_IDS.map((k) => <li><span>{LOTS[k].code}</span><span>{m2(LOTS[k].kind === 'warehouse' ? LOTS[k].land! : LOTS[k].lot!)}</span></li>)}</ul></div>
+        <div><h3>{t('Áreas comunes', 'Common areas')}</h3><ul>{commons.map(([n, c]) => <li><span>{n}</span><span>{c}</span></li>)}</ul></div>
+      </div>
+    </div>
   </section>
 
-  <section class="sec char"><div class="wrap loc-grid">
-    <div class="rv"><span class="eyebrow">{t('Ubicación', 'Location')}</span>
-      <h2 class="h-l" style="margin-top:22px" set:html={t('En el corredor industrial <b>del oeste.</b>', 'In the western <b>industrial corridor.</b>')} />
-      <p class="lead" style="margin-top:24px;color:rgba(255,255,255,.72)">{t('Calle Potrerillos, San Rafael de Alajuela. Conexión con Radial Lindora y Ruta 27, rodeado de parques empresariales, centros de distribución y servicios.', 'Calle Potrerillos, San Rafael, Alajuela. Connected to Radial Lindora and Route 27, surrounded by business parks, distribution centers and services.')}</p>
-      <a class="btn btn-ghost" style="margin-top:36px" href={href('location', lang)}>{t('Ver ubicación', 'View location')} <Arrow /></a></div>
-    <div class="rv"><Img name="entorno-aereo-2" alt={t('Entorno del condominio', 'Condominium surroundings')} sizes="(max-width:900px) 100vw, 50vw" /></div>
-  </div></section>
+  <!-- La propiedad: fila arrastrable -->
+  <section class="drag-sec" aria-labelledby="fotos-h">
+    <div class="drag-head"><h2 id="fotos-h">{t('La propiedad', 'The property')}</h2><span><a class="link" href={href('gallery', lang)}>{t(`Ver las ${GAL.length} fotos`, `See all ${GAL.length} photos`)}</a></span></div>
+    <div class="drag" data-drag>
+      {drag.map(([kind, imgs]) => (
+        <div class={`m ${kind}`}>{imgs.map((n) => <button type="button" data-lb="home" data-full={`/img/${n}.webp`} data-cap={t(CAP[n][0], CAP[n][1])} aria-label={t(CAP[n][0], CAP[n][1])}><Img name={n} alt={t(CAP[n][0], CAP[n][1])} sizes="(max-width:900px) 80vw, 40vw" /></button>)}</div>
+      ))}
+      <div class="end"></div>
+    </div>
+  </section>
+
+  <!-- Visita -->
+  <section class="visit" aria-labelledby="visit-h">
+    <Img name="bodega-acceso" alt={t('Acceso y estacionamientos de la bodega', 'Warehouse entrance and parking')} sizes="100vw" />
+    <div class="visit-card">
+      <h2 id="visit-h">{t('Visite Cubo Park', 'Visit Cubo Park')}</h2>
+      <p>Calle Potrerillos, San Rafael<br />Alajuela, Costa Rica</p>
+      <div class="rows">
+        <div><span>{t('Conexión', 'Access')}</span><span>Radial Lindora, Ruta 27</span></div>
+        <div><span>{t('Horario', 'Hours')}</span><span class="pend">{t('por confirmar', 'to be confirmed')}</span></div>
+        <div><span>WhatsApp</span><span class="pend num">{SITE.contact.phone}</span></div>
+      </div>
+      <div class="links"><a class="link" href={SITE.maps} target="_blank" rel="noopener">Google Maps</a><a class="link" href={SITE.waze} target="_blank" rel="noopener">Waze</a></div>
+      <a class="btn" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a>
+    </div>
+  </section>
 </Base>

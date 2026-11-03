@@ -1,57 +1,58 @@
 ---
 import Base from '../layouts/Base.astro';
-import Phero from '../components/Phero.astro';
-import Plan from '../components/Plan.astro';
-import LotCard from '../components/LotCard.astro';
-import Bundle from '../components/Bundle.astro';
-import { LOTS, LOT_IDS, ppm, houseValue } from '../data/lots';
+import Planner from '../components/Planner.astro';
+import Stage from '../components/Stage.astro';
+import Fields from '../components/Fields.astro';
+import { LOTS, ALL_IDS, BUNDLE, WAREHOUSE, ppm, houseValue } from '../data/lots';
 import { useT, href, money, m2, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
-const w = LOTS.ib5;
 ---
-<Base lang={lang} route="availability" image="vista-lateral"
+<Base lang={lang} route="availability"
   title={t('Disponibilidad y precios | Cubo Park', 'Availability & Pricing | Cubo Park')}
-  description={t('Master plan interactivo y precios en USD de los lotes industriales FFM-IB-4, 6, 7 y 8 y la bodega FFM-IB-5 de Cubo Park, San Rafael de Alajuela.', 'Interactive master plan and USD pricing for industrial lots FFM-IB-4, 6, 7 and 8 and warehouse FFM-IB-5 at Cubo Park, San Rafael, Alajuela.')}>
-  <Phero lang={lang} img="vista-lateral" crumbs={[[t('Disponibilidad', 'Availability')]]}
-    h1={t('Disponibilidad <b>y precios</b>', 'Availability <b>& pricing</b>')}
-    lead={t('Cuatro fincas filiales en venta y una bodega en venta o alquiler. Todos los precios en dólares estadounidenses.', 'Four lots for sale and one warehouse for sale or lease. All prices in US dollars.')} />
+  description={t('Precios en USD de los lotes FFM-IB-6, 7 y 8 ($250/m²), la finca con casa FFM-IB-4 ($350/m² + casa) y la bodega FFM-IB-5 (precio global) en Cubo Park, San Rafael de Alajuela.', 'USD prices for lots FFM-IB-6, 7 and 8 ($250/m²), the house lot FFM-IB-4 ($350/m² + house) and warehouse FFM-IB-5 (package price) at Cubo Park, San Rafael, Alajuela.')}>
+  <div class="split" data-stage-root>
+    <Stage items={[{ k: 'top', img: 'entorno-aereo', alt: t('Los lotes del fondo y la bodega vistos desde el aire', 'The rear lots and the warehouse from the air') }, { k: 'rules', img: 'casa-ib4' }]} />
+    <div class="col">
+      <section class="page-head" data-stage="top">
+        <nav class="crumbs" aria-label={t('Ruta', 'Breadcrumb')}><a href={href('home', lang)}>{t('Inicio', 'Home')}</a><span aria-hidden="true">/</span><span>{t('Disponibilidad', 'Availability')}</span></nav>
+        <h1 id="a-h" class="rise">{t('Disponibilidad y precios', 'Availability and prices')}</h1>
+        <p class="lead rise" style="--i:1">{t('Cada finca tiene su propia forma de precio. Todo en dólares.', 'Each lot is priced its own way. Everything in US dollars.')}</p>
+      </section>
+      <section data-stage="rules" aria-labelledby="a-rules">
+        <h2 id="a-rules" class="rise">{t('Cómo se calcula cada precio', 'How each price is set')}</h2>
+        <div class="rules-list">
+          <div><img src="/img/terreno-aereo-sm.webp" width="900" height="600" alt={t('Lotes del fondo', 'Rear lots')} loading="eager" /><span class="v">$250/m²</span><span class="k">FFM-IB-6, 7 {t('y', '&')} 8</span><span class="d">{t('Lotes del fondo, detrás de la bodega. Sobre el área total: finca más su zona verde asignada.', 'Rear lots behind the warehouse. On total area: the lot plus its assigned green zone.')}</span></div>
+          <div><img src="/img/casa-ib4-sm.webp" width="900" height="600" alt={t('Finca con casa FFM-IB-4', 'House lot FFM-IB-4')} loading="eager" /><span class="v">$350/m² + {t('casa', 'house')}</span><span class="k">FFM-IB-4</span><span class="d">{t('Frente a la calle principal. Terreno a $350/m² más el valor de la casa construida.', 'On the main street. Land at $350/m² plus the value of the existing house.')}</span></div>
+          <div><img src="/img/bodega-aerea-sm.webp" width="900" height="600" alt={t('Bodega FFM-IB-5', 'Warehouse FFM-IB-5')} loading="eager" /><span class="v">{t('Precio global', 'Package price')}</span><span class="k">FFM-IB-5</span><span class="d">{t('Bodega de 5,500 m² con su terreno, en venta o alquiler. No se cotiza por m².', '5,500 m² warehouse with its land, for sale or lease. Not priced per m².')}</span></div>
+        </div>
+      </section>
+    </div>
+  </div>
 
-  <section class="sec dark" style="padding-top:clamp(50px,6vw,80px)"><div class="wrap"><Plan lang={lang} selected="ib6" /></div></section>
+  <section class="planner" aria-labelledby="a-plan">
+    <div class="planner-head"><h2 id="a-plan" class="rise">{t('Arme su compra', 'Build your purchase')}</h2><p class="rise" style="--i:1">{t('Toque las fincas para sumarlas. El total y el área se calculan con los precios publicados.', 'Tap the lots to add them up. The total and the area use the published prices.')}</p></div>
+    <Planner lang={lang} mode="select" />
+  </section>
 
-  <section class="sec light"><div class="wrap">
-    <div class="sec-head split"><div><span class="eyebrow">{t('Comparativo', 'Comparison')}</span>
-      <h2 class="h-l" style="margin-top:22px" set:html={t('Todas las fincas, <b>lado a lado</b>', 'Every lot, <b>side by side</b>')} /></div>
-      <div class="price-rules">
-        <div><span class="k">{t("FFM-IB-6, 7 y 8", "FFM-IB-6, 7 & 8")}</span><span class="v">$250/m²</span><span class="d">{t('Lotes del fondo, detrás de la bodega. Sobre el área total, que incluye la zona verde A.C.L.R. de cada finca.', 'Rear lots behind the warehouse. On total area, including each lot’s A.C.L.R. green zone.')}</span></div>
-        <div><span class="k">FFM-IB-4</span><span class="v">$350/m² + {t('casa', 'house')}</span><span class="d">{t('Frente a calle principal. Terreno a $350/m² más el valor de la casa construida.', 'Fronting the main street. Land at $350/m² plus the value of the existing house.')}</span></div>
-        <div><span class="k">FFM-IB-5</span><span class="v">{t('Precio global', 'Package price')}</span><span class="d">{t('Bodega de 5,500 m² con su terreno, en venta o alquiler.', '5,500 m² warehouse with its land, for sale or lease.')}</span></div>
-      </div></div>
-    <div class="filters" data-filter-group="#av-body">
-      <button class="f on" data-f="all">{t('Todas', 'All')}</button><button class="f" data-f="sale">{t('En venta', 'For sale')}</button><button class="f" data-f="rent">{t('En alquiler', 'For lease')}</button>
+  <section class="band" aria-labelledby="a-tbl">
+    <h2 id="a-tbl" class="h2 rise" style="margin-bottom:24px">{t('Todas las fincas', 'Every lot')}</h2>
+    <div class="filters" data-filter-group="#av-body" role="group" aria-label={t('Filtrar', 'Filter')}>
+      <button type="button" data-f="all" aria-pressed="true">{t('Todas', 'All')}</button><button type="button" data-f="sale" aria-pressed="false">{t('En venta', 'For sale')}</button><button type="button" data-f="rent" aria-pressed="false">{t('En alquiler', 'For lease')}</button>
     </div>
     <div class="tbl-wrap"><table class="av">
-      <thead><tr><th>{t('Finca', 'Lot')}</th><th>{t('Tipo', 'Type')}</th><th class="r">{t('Área finca', 'Lot area')}</th><th class="r">{t('Zona verde', 'Green zone')}</th><th class="r">{t('Área total', 'Total area')}</th><th class="r">{t('Precio', 'Price')}</th><th class="r">$/m²</th><th>{t('Modalidad', 'Terms')}</th><th><span class="sr-only">{t('Ficha', 'Details')}</span></th></tr></thead>
+      <thead><tr><th><span class="sr-only">{t('Foto', 'Photo')}</span></th><th>{t('Finca', 'Lot')}</th><th>{t('Qué es', 'What it is')}</th><th class="r">{t('Área de cálculo', 'Pricing area')}</th><th class="r">{t('Precio por m²', 'Price per m²')}</th><th class="r">{t('Precio', 'Price')}</th><th>{t('Modalidad', 'Terms')}</th></tr></thead>
       <tbody id="av-body">
-        {['ib4', 'ib5', 'ib6', 'ib7', 'ib8'].map((k) => {
-          const v = LOTS[k];
-          return k === 'ib5' ? (
-            <tr data-cat="sale rent"><td class="id">{v.code}</td><td>{t('Bodega · 5,500 m² construidos', 'Warehouse · 5,500 m² built')}</td><td class="r">{m2(w.land!)}</td><td class="r">—</td><td class="r">{m2(w.land!)}</td>
-              <td class="r pr">{money(v.price)}<br /><span class="muted" style="font-size:.8rem;font-weight:400">{t('o $8/m² + IVA', 'or $8/m² + VAT')}</span></td><td class="r">—</td>
-              <td><span class="badge both">{t('Venta / Alquiler', 'Sale / Lease')}</span></td><td><a class="link-arrow" href={href('lot:ib5', lang)}>{t('Ficha', 'Details')}</a></td></tr>
-          ) : (
-            <tr data-cat="sale"><td class="id">{v.code}</td><td>{t(v.name_es, v.name_en)}</td><td class="r">{m2(v.lot!)}</td><td class="r">{v.green ? m2(v.green) : '—'}</td><td class="r">{m2(v.total!)}</td>
-              <td class="r pr">{money(v.price)}{v.kind === 'house' && <><br /><span class="muted" style="font-size:.8rem;font-weight:400">{t('Terreno + casa', 'Land + house')}</span></>}</td><td class="r">{money(ppm(v))}{v.kind === 'house' && <><br /><span class="muted" style="font-size:.8rem">+ {t('casa', 'house')} {money(houseValue(v))}</span></>}</td><td><span class="badge">{t('Venta', 'Sale')}</span></td><td><a class="link-arrow" href={href(`lot:${k}`, lang)}>{t('Ficha', 'Details')}</a></td></tr>
-          );
+        {ALL_IDS.map((k) => { const v = LOTS[k];
+          if (v.kind === 'warehouse') return (<tr data-cat="sale rent"><td class="pic"><img class="thumb" src={`/img/${v.img}-sm.webp`} width="900" height="600" alt="" loading="eager" decoding="async" /></td><td class="id"><a class="link" href={href(`lot:${k}`, lang)}>{v.code}</a></td><td>{t('Bodega, 5,500 m² construidos', 'Warehouse, 5,500 m² built')}<small>{t('Terreno de', 'Land of')} {m2(v.land!)}</small></td><td class="r">—</td><td class="r">{t('Precio global', 'Package price')}</td><td class="r">{money(v.price)}<small>{t('o', 'or')} {money(WAREHOUSE.total)}{t('/mes', '/month')}</small></td><td>{t('Venta o alquiler', 'Sale or lease')}</td></tr>);
+          if (v.kind === 'house') return (<tr data-cat="sale"><td class="pic"><img class="thumb" src={`/img/${v.img}-sm.webp`} width="900" height="600" alt="" loading="eager" decoding="async" /></td><td class="id"><a class="link" href={href(`lot:${k}`, lang)}>{v.code}</a></td><td>{t('Terreno y casa', 'Land and house')}<small>{t('Frente a la calle principal', 'On the main street')}</small></td><td class="r">{m2(v.total!)}</td><td class="r">{money(ppm(v))}<small>+ {t('casa', 'house')} {money(houseValue(v))}</small></td><td class="r">{money(v.price)}</td><td>{t('Venta', 'Sale')}</td></tr>);
+          return (<tr data-cat="sale"><td class="pic"><img class="thumb" src={`/img/${v.img}-sm.webp`} width="900" height="600" alt="" loading="eager" decoding="async" /></td><td class="id"><a class="link" href={href(`lot:${k}`, lang)}>{v.code}</a></td><td>{t('Lote del fondo', 'Rear lot')}<small>{m2(v.lot!)} + {t('zona verde', 'green zone')} {m2(v.green!)}</small></td><td class="r">{m2(v.total!)}</td><td class="r">{money(ppm(v))}</td><td class="r">{money(v.price)}</td><td>{t('Venta', 'Sale')}</td></tr>);
         })}
       </tbody>
+      <tfoot><tr><td class="id" colspan="5">{t('Todo el proyecto, las cinco fincas', 'Entire project, all five lots')}<small>{m2(BUNDLE.land)} {t('de terreno', 'of land')}</small></td><td class="r"><b>{money(BUNDLE.price)}</b></td><td>{t('Venta', 'Sale')}</td></tr></tfoot>
     </table></div>
-    <div class="cta-strip"><span class="t" set:html={t('¿Le interesa <b>todo el proyecto</b>? Vea el precio total y la sumatoria de m².', 'Interested in <b>the entire project</b>? See the total price and combined area.')} />
-      <a class="btn btn-red" href={'#' + t('proyecto-completo', 'entire-project')}>{t('Comprar todo el proyecto', 'Buy the entire project')}</a></div>
-    <p class="muted" style="font-size:.82rem;margin-top:18px">{t('Áreas según planos catastrados y cuadros de áreas del anteproyecto. Precios en USD, sujetos a cambio sin previo aviso.', 'Areas per cadastral surveys and the preliminary project area tables. Prices in USD, subject to change without notice.')}</p>
-  </div></section>
+    <p class="muted" style="margin-top:18px;font-size:var(--t4);max-width:70ch">{t('Áreas según planos catastrados y cuadros de áreas del condominio. Precios en USD, sujetos a cambio sin previo aviso.', 'Areas per the cadastral surveys and the condominium area tables. Prices in USD, subject to change without notice.')}</p>
+  </section>
 
-  <Bundle lang={lang} />
-
-  <section class="sec white"><div class="wrap"><div class="cards">{LOT_IDS.map((id) => <LotCard id={id} lang={lang} />)}</div></div></section>
+  <Fields lang={lang} />
 </Base>

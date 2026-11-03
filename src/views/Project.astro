@@ -1,58 +1,65 @@
 ---
 import Base from '../layouts/Base.astro';
-import Img from '../components/Img.astro';
-import Icon from '../components/Icon.astro';
 import Arrow from '../components/Arrow.astro';
-import Phero from '../components/Phero.astro';
-import Plan from '../components/Plan.astro';
-import { LOTS } from '../data/lots';
-import { useT, href, m2, type Lang } from '../i18n';
+import Stage from '../components/Stage.astro';
+import Planner from '../components/Planner.astro';
+import { LOTS, ALL_IDS } from '../data/lots';
+import { useT, href, money, m2, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
-const specs: [string, string, string, string, string][] = [
-  ['road', 'Calle interna', 'Internal road', 'Acceso vehicular asfaltado con cordón y caño que recorre todo el condominio, desde la calle pública hasta el último lote.', 'Paved vehicle access with curbs running the full length of the condominium, from the public street to the last lot.'],
-  ['drop', 'Planta de tratamiento', 'Treatment plant', 'Planta de tratamiento de aguas residuales común, ubicada en el extremo norte del terreno.', 'Shared wastewater treatment plant at the north end of the property.'],
-  ['layers', 'Laguna de retención', 'Retention pond', 'Laguna de retención pluvial impermeabilizada que regula la escorrentía del condominio.', 'Lined stormwater retention pond that regulates runoff from the condominium.'],
-  ['leaf', 'Zonas verdes', 'Green areas', 'Zonas verdes entre fincas y una franja de protección a lo largo del río Bermúdez.', 'Green areas between lots and a protected buffer along the Bermúdez River.'],
-  ['park', 'Estacionamientos', 'Parking', 'Áreas de estacionamiento y maniobra frente a la bodega existente.', 'Parking and maneuvering areas in front of the existing warehouse.'],
-  ['doc', 'Planos catastrados', 'Cadastral surveys', 'Cada finca filial cuenta con su plano catastrado inscrito ante el Registro Nacional.', 'Every lot has its own cadastral survey registered with the National Registry.'],
-];
 ---
-<Base lang={lang} route="project" image="bodega-aerea-2"
+<Base lang={lang} route="project"
   title={t('El Proyecto | Cubo Park Condominio', 'The Project | Cubo Park Condominio')}
   description={t('Condominio industrial de fincas filiales con calle interna, planta de tratamiento, laguna de retención y uso de suelo industrial en San Rafael de Alajuela.', 'Industrial condominium of titled lots with internal road, treatment plant, retention pond and industrial zoning in San Rafael, Alajuela.')}>
-  <Phero lang={lang} img="bodega-aerea-2" crumbs={[[t('El Proyecto', 'The Project')]]}
-    h1={t('Un condominio pensado <b>para la industria.</b>', 'A condominium built <b>for industry.</b>')}
-    lead={t('Fincas filiales independientes, áreas comunes construidas y uso de suelo industrial, en una de las zonas de mayor crecimiento logístico del Valle Central.', 'Independent titled lots, finished common areas and industrial zoning in one of the fastest-growing logistics areas of the Central Valley.')} />
+  <div class="split" data-stage-root>
+    <Stage items={[{ k: 'top', img: 'aerial-panorama', alt: t('Cubo Park y su entorno desde el aire', 'Cubo Park and its surroundings from the air') }, { k: 'how', img: 'bodega-calle' }, { k: 'built', img: 'terreno-aereo-2' }, { k: 'use', img: 'bodega-aerea-2' }]} />
+    <div class="col">
+      <section class="page-head" data-stage="top">
+        <nav class="crumbs" aria-label={t('Ruta', 'Breadcrumb')}><a href={href('home', lang)}>{t('Inicio', 'Home')}</a><span aria-hidden="true">/</span><span>{t('El proyecto', 'The project')}</span></nav>
+        <h1 class="rise">{t('Hecho para la industria', 'Built for industry')}</h1>
+        <p class="lead rise" style="--i:1">{t('Fincas con título propio y servicios compartidos, en el corredor industrial del oeste.', 'Independently titled lots with shared services, in the western industrial corridor.')}</p>
+      </section>
+      <section data-stage="how" aria-labelledby="p-how">
+        <h2 id="p-how" class="rise">{t('Cómo funciona', 'How it works')}</h2>
+        <div class="prose rise" style="--i:1">
+          <p>{t('Cubo Park está constituido bajo el régimen de propiedad en condominio, sobre una finca matriz de 67,111.58 m². Cada finca filial tiene plano catastrado y folio real propios, así que se compra, se financia o se vende por separado.', 'Cubo Park is set up under Costa Rica’s condominium property regime, on a 67,111.58 m² parent property. Each lot has its own cadastral survey and title, so it can be bought, financed or sold on its own.')}</p>
+          <p>{t('El condominio resuelve en común la calle de acceso, el tratamiento de aguas, la retención pluvial y las zonas verdes. Cada dueño aporta una cuota de mantenimiento.', 'The condominium handles the access road, wastewater treatment, stormwater retention and green areas in common. Each owner contributes a maintenance fee.')}</p>
+        </div>
+      </section>
+      <section data-stage="built" aria-labelledby="p-built">
+        <h2 id="p-built" class="rise">{t('Lo que ya está construido', 'What is already built')}</h2>
+        <ul class="ticks rise" style="--i:1">
+          <li>{t('Calle interna asfaltada con cordón y caño, desde la calle pública hasta el último lote', 'Paved internal road with curbs, from the public street to the last lot')}</li>
+          <li>{t('Planta de tratamiento de aguas residuales común', 'Shared wastewater treatment plant')}</li>
+          <li>{t('Laguna de retención pluvial impermeabilizada', 'Lined stormwater retention pond')}</li>
+          <li>{t('Zonas verdes y franja de protección de 15 m del río Bermúdez', 'Green areas and a 15 m buffer along the Bermúdez River')}</li>
+          <li>{t('Caseta de guarda, depósito de basura y cuarto de mantenimiento', 'Guard booth, waste room and maintenance room')}</li>
+          <li>{t('Estacionamientos frente a la bodega', 'Parking in front of the warehouse')}</li>
+        </ul>
+      </section>
+      <section data-stage="use" aria-labelledby="p-use">
+        <h2 id="p-use" class="rise">{t('Usos permitidos', 'Permitted uses')}</h2>
+        <p class="rise" style="--i:1">{t('Según los planos catastrados, las fincas están destinadas a uso industrial, bodegas, ofibodegas y oficinas.', 'Per the cadastral surveys, the lots are designated for industrial use, warehouses, flex space and offices.')}</p>
+        <div class="acts rise" style="--i:2"><a class="btn" href={href('availability', lang)}>{t('Ver precios', 'See prices')} <Arrow /></a><a class="btn btn-quiet" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a></div>
+      </section>
+    </div>
+  </div>
 
-  <section class="sec light"><div class="wrap split2">
-    <div class="rv"><span class="eyebrow">{t('Concepto', 'Concept')}</span>
-      <h2 class="h-l" style="margin-top:22px" set:html={t('Su propia finca, <b>con servicios compartidos.</b>', 'Your own lot, <b>with shared services.</b>')} />
-      <div class="prose" style="margin-top:26px">
-        <p>{t('Cubo Park está constituido bajo el régimen de propiedad en condominio. Cada finca filial tiene plano catastrado y folio real propios, lo que permite comprar, financiar o vender cada unidad por separado.', 'Cubo Park is set up under Costa Rica’s condominium property regime. Each lot has its own cadastral survey and title, so every unit can be bought, financed or sold on its own.')}</p>
-        <p>{t('Las fincas están destinadas a uso industrial, bodegas, ofibodegas y oficinas. El condominio resuelve en común la calle de acceso, el tratamiento de aguas, la retención pluvial y las zonas verdes.', 'Lots are designated for industrial, warehouse, flex-space and office use. The condominium handles the access road, wastewater treatment, stormwater retention and green areas in common.')}</p>
-      </div></div>
-    <div class="frame rv"><Img name="bodega-calle" alt={t('Calle interna de Cubo Park', 'Cubo Park internal road')} sizes="(max-width:900px) 100vw, 50vw" /></div>
-  </div></section>
+  <section class="planner" aria-labelledby="p-plan">
+    <div class="planner-head"><h2 id="p-plan" class="rise">{t('Cinco fincas disponibles', 'Five lots available')}</h2><p class="rise" style="--i:1">{t('Toque las fincas para ver cuánto suman en terreno y en precio. Las fincas FFM-IB-1, 2 y 3 son otras unidades y áreas de paso del condominio.', 'Tap the lots to see what they add up to in land and price. Lots FFM-IB-1, 2 and 3 are other units and rights of way within the condominium.')}</p></div>
+    <Planner lang={lang} mode="select" />
+  </section>
 
-  <section class="sec white"><div class="wrap">
-    <div class="sec-head"><span class="eyebrow">{t('Infraestructura', 'Infrastructure')}</span>
-      <h2 class="h-l" set:html={t('Lo que ya está <b>construido</b>', 'What is already <b>built</b>')} /></div>
-    <div class="specs">{specs.map(([i, he, hn, pe, pn]) => <div class="spec rv"><Icon name={i} /><h3>{t(he, hn)}</h3><p>{t(pe, pn)}</p></div>)}</div>
-  </div></section>
-
-  <section class="sec dark"><div class="wrap">
-    <div class="sec-head split"><div><span class="eyebrow">{t('Conjunto', 'Site plan')}</span>
-      <h2 class="h-l" style="margin-top:22px" set:html={t('Cinco fincas <b>disponibles</b>', 'Five lots <b>available</b>')} /></div>
-      <p class="lead">{t('Las fincas FFM-IB-1, 2 y 3 corresponden a otras unidades y áreas de paso del condominio.', 'Lots FFM-IB-1, 2 and 3 are other units and right-of-way areas within the condominium.')}</p></div>
-    <div style="margin-bottom:56px"><Plan lang={lang} selected="ib7" /></div>
-    <div class="tbl-wrap tbl-dark"><table class="av">
-      <thead><tr><th>{t('Finca', 'Lot')}</th><th>{t('Tipo', 'Type')}</th><th class="r">{t('Terreno', 'Land')}</th><th class="r">{t('Construcción', 'Built')}</th><th>{t('Estado', 'Status')}</th></tr></thead>
-      <tbody>{Object.values(LOTS).map((v) => (
-        <tr><td class="id"><a href={href(`lot:${v.id}`, lang)}>{v.code}</a></td><td>{v.kind === 'warehouse' ? t('Bodega construida', 'Built warehouse') : t(v.name_es, v.name_en)}</td>
-          <td class="r">{v.kind === 'warehouse' ? m2(v.land!) : m2(v.total!)}</td><td class="r">{v.kind === 'warehouse' ? m2(v.built!, 0) : '—'}</td><td>{t(v.status_es, v.status_en)}</td></tr>))}</tbody>
+  <section class="band" aria-labelledby="p-tbl">
+    <h2 id="p-tbl" class="h2 rise" style="margin-bottom:28px">{t('Las fincas, según los planos', 'The lots, per the surveys')}</h2>
+    <div class="tbl-wrap"><table class="av">
+      <thead><tr><th>{t('Finca', 'Lot')}</th><th>{t('Qué es', 'What it is')}</th><th class="r">{t('Área en catastro', 'Cadastral area')}</th><th class="r">{t('Construcción', 'Building')}</th><th class="r">{t('Precio', 'Price')}</th></tr></thead>
+      <tbody>{ALL_IDS.map((k) => { const v = LOTS[k]; return (
+        <tr><td class="id"><a class="link" href={href(`lot:${k}`, lang)}>{v.code}</a></td>
+          <td>{v.kind === 'warehouse' ? t('Bodega con su terreno', 'Warehouse with its land') : t(v.name_es, v.name_en)}</td>
+          <td class="r">{m2(v.kind === 'warehouse' ? v.land! : v.lot!)}</td>
+          <td class="r">{v.kind === 'warehouse' ? m2(v.built!, 0) : v.kind === 'house' ? t('Casa', 'House') : '—'}</td>
+          <td class="r">{money(v.price)}</td></tr>); })}</tbody>
     </table></div>
-    <div style="margin-top:40px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-red" href={href('availability', lang)}>{t('Ver precios y plano interactivo', 'See prices and interactive plan')} <Arrow /></a>
-      <a class="btn btn-ghost" href={href('availability', lang) + '#' + t('proyecto-completo', 'entire-project')}>{t('Comprar todo el proyecto', 'Buy the entire project')}</a></div>
-  </div></section>
+  </section>
 </Base>

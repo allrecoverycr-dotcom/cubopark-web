@@ -1,14 +1,11 @@
 ---
 import '../styles/global.css';
-import Img from '../components/Img.astro';
-import Arrow from '../components/Arrow.astro';
-import Ph from '../components/Ph.astro';
 import { SITE } from '../data/site';
 import { LOTS } from '../data/lots';
 import { NAV, href, useT, type Lang, type RouteKey } from '../i18n';
 
-interface Props { lang: Lang; route: RouteKey; title: string; description: string; image?: string; jsonld?: object | object[]; navKey?: RouteKey }
-const { lang, route, title, description, image = 'vista-lateral', jsonld, navKey } = Astro.props;
+interface Props { lang: Lang; route: RouteKey; title: string; description: string; image?: string; jsonld?: object | object[]; navKey?: RouteKey; home?: boolean }
+const { lang, route, title, description, jsonld, navKey, home = false } = Astro.props;
 const t = useT(lang);
 const other: Lang = lang === 'es' ? 'en' : 'es';
 const url = new URL(href(route, lang), SITE.domain).href;
@@ -53,65 +50,46 @@ const ld = [org, ...(jsonld ? (Array.isArray(jsonld) ? jsonld : [jsonld]) : [])]
   <meta property="og:image:alt" content="Cubo Park Condominio" />
   <meta name="twitter:image" content={ogImage} />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#161616" />
+  <meta name="theme-color" content="#171515" />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="sitemap" href="/sitemap-index.xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" />
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
 </head>
-<body>
+<body class={home ? 'home' : undefined}>
   <a href="#main" class="skip">{t('Saltar al contenido', 'Skip to content')}</a>
-  <header class="hdr"><div class="wrap">
+  <header class="bar">
     <a class="brand" href={href('home', lang)} aria-label={t('Cubo Park, inicio', 'Cubo Park, home')}>
-      <img class="ic" src="/img/icon-white.png" width="240" height="185" alt="" />
-      <img class="wd" src="/img/word-white.png" width="520" height="65" alt="Cubo Park Condominio" />
+      <img src="/img/icon-color.png" width="240" height="185" alt="" />
+      <img class="wd" src="/img/word-color.png" width="520" height="65" alt="Cubo Park" />
     </a>
-    <nav class="nav" aria-label={t('Principal', 'Main')}>
-      {NAV.map(([k, es, en]) => <a href={href(k, lang)} aria-current={k === current ? 'page' : undefined}>{t(es, en)}</a>)}
-    </nav>
-    <div class="hdr-r">
-      <div class="lang" role="group" aria-label="Idioma / Language">
+    <nav aria-label={t('Principal', 'Main')}>
+      {NAV.filter(([k]) => k !== 'home' && k !== 'contact').map(([k, es, en]) => <a href={href(k, lang)} aria-current={k === current ? 'page' : undefined}>{t(es, en)}</a>)}
+      <span class="lang" role="group" aria-label="Idioma / Language">
         <a href={urlEs.replace(SITE.domain, '')} hreflang="es" lang="es" aria-current={lang === 'es' ? 'true' : undefined}>ES</a>
         <a href={urlEn.replace(SITE.domain, '')} hreflang="en" lang="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
-      </div>
-      <a class="btn btn-red" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a>
-      <button class="burger" aria-label={t('Menú', 'Menu')} aria-expanded="false"><span></span><span></span><span></span></button>
-    </div>
-  </div></header>
-  <nav class="mnav" aria-label={t('Menú móvil', 'Mobile menu')}>
+      </span>
+      <a class="btn act" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a>
+    </nav>
+    <span class="end-m"><a class="btn act-m" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a><button class="menu-btn" aria-expanded="false" aria-controls="mnav">{t('Menú', 'Menu')}</button></span>
+  </header>
+  <nav class="mnav" id="mnav" aria-label={t('Menú móvil', 'Mobile menu')}>
     {NAV.map(([k, es, en]) => <a href={href(k, lang)}>{t(es, en)}</a>)}
-    <a class="btn btn-red" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a>
+    <a href={(other === 'en' ? urlEn : urlEs).replace(SITE.domain, '')} hreflang={other} lang={other}>{other === 'en' ? 'English' : 'Español'}</a>
+    <a class="btn" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a>
   </nav>
 
   <main id="main"><slot /></main>
 
-  <section class="cta-band">
-    <Img name="bodega-acceso" />
-    <div class="wrap">
-      <div><span class="eyebrow" style="color:var(--sand)">{t('Visitas guiadas', 'Guided tours')}</span>
-        <h2 class="h-l" style="margin-top:22px" set:html={t('Conozca Cubo Park <b>en persona.</b>', 'See Cubo Park <b>in person.</b>')} /></div>
-      <div class="acts">
-        <a class="btn btn-ghost" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')} <Arrow /></a>
-        <a class="btn btn-white" href={wa} target="_blank" rel="noopener">WhatsApp</a>
-      </div>
-    </div>
-  </section>
-
-  <footer class="ftr"><div class="wrap">
-    <div class="ftr-g">
-      <div><img class="lg" src="/img/logo-white.png" width="600" height="582" alt="Cubo Park Condominio" loading="lazy" />
-        <p>{t('Condominio industrial y de bodegas de fincas filiales. San Rafael, Alajuela, Costa Rica.', 'Industrial and warehouse condominium with independent titled lots. San Rafael, Alajuela, Costa Rica.')}</p></div>
-      <div><h2 class="fh">{t('Navegación', 'Explore')}</h2><ul>{NAV.map(([k, es, en]) => <li><a href={href(k, lang)}>{t(es, en)}</a></li>)}</ul></div>
-      <div><h2 class="fh">{t('Disponibles', 'Available')}</h2><ul>{Object.keys(LOTS).map((k) => <li><a href={href(`lot:${k}` as RouteKey, lang)}>{LOTS[k].code}</a></li>)}<li><a href={href('availability', lang) + '#' + t('proyecto-completo', 'entire-project')}>{t('Todo el proyecto', 'Entire project')}</a></li></ul></div>
-      <div><h2 class="fh">{t('Contacto', 'Contact')}</h2><ul>
-        <li><Ph>{SITE.contact.phone}</Ph></li><li><Ph>{SITE.contact.email}</Ph></li>
-        <li>{SITE.address.street}, {SITE.address.locality}, {SITE.address.region}</li></ul></div>
-    </div>
-    <div class="ftr-b"><span>© <span id="yr">2026</span> {SITE.name}. {t('Precios en dólares estadounidenses (USD), sujetos a cambio sin previo aviso.', 'Prices in US dollars (USD), subject to change without notice.')}</span>
-      <a href={(other === 'en' ? urlEn : urlEs).replace(SITE.domain, '')} hreflang={other}>{other === 'en' ? 'English version' : 'Versión en español'}</a></div>
-  </div></footer>
+  <footer class="foot">
+    <span class="what">{t('Cubo Park, condominio industrial en San Rafael de Alajuela', 'Cubo Park, an industrial condominium in San Rafael, Alajuela')}</span>
+    <nav aria-label={t('Pie de página', 'Footer')}>
+      {NAV.filter(([k]) => k !== 'home').map(([k, es, en]) => <a href={href(k, lang)}>{t(es, en)}</a>)}
+    </nav>
+    <span class="end">© <span id="yr">2026</span>. {t('Precios en USD.', 'Prices in USD.')} <a href={(other === 'en' ? urlEn : urlEs).replace(SITE.domain, '')} hreflang={other} lang={other}>{other === 'en' ? 'English' : 'Español'}</a></span>
+  </footer>
 
   <a class="wa" href={wa} target="_blank" rel="noopener" aria-label="WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg>
