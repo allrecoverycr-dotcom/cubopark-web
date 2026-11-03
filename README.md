@@ -27,3 +27,6 @@ Sitio web bilingüe (español / inglés) de Cubo Park, hecho con [Astro](https:/
 npm install
 npm run dev
 ```
+
+## Caché
+Las imágenes se guardan en caché 1 año: si cambia una foto, súbala con **otro nombre**. El script `app.js` se versiona automáticamente en cada compilación.
