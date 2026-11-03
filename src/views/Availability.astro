@@ -4,7 +4,7 @@ import Phero from '../components/Phero.astro';
 import Plan from '../components/Plan.astro';
 import LotCard from '../components/LotCard.astro';
 import Bundle from '../components/Bundle.astro';
-import { LOTS, LOT_IDS, ppm } from '../data/lots';
+import { LOTS, LOT_IDS, ppm, houseValue } from '../data/lots';
 import { useT, href, money, m2, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
@@ -22,7 +22,11 @@ const w = LOTS.ib5;
   <section class="sec light"><div class="wrap">
     <div class="sec-head split"><div><span class="eyebrow">{t('Comparativo', 'Comparison')}</span>
       <h2 class="h-l" style="margin-top:22px" set:html={t('Todas las fincas, <b>lado a lado</b>', 'Every lot, <b>side by side</b>')} /></div>
-      <p class="lead">{t('Los lotes industriales se cotizan a $250 por m² sobre el área total, que incluye la zona verde A.C.L.R. asignada a cada finca.', 'Industrial lots are priced at $250 per m² on total area, which includes the A.C.L.R. green zone assigned to each lot.')}</p></div>
+      <div class="price-rules">
+        <div><span class="k">{t("FFM-IB-6, 7 y 8", "FFM-IB-6, 7 & 8")}</span><span class="v">$250/m²</span><span class="d">{t('Lotes del fondo, detrás de la bodega. Sobre el área total, que incluye la zona verde A.C.L.R. de cada finca.', 'Rear lots behind the warehouse. On total area, including each lot’s A.C.L.R. green zone.')}</span></div>
+        <div><span class="k">FFM-IB-4</span><span class="v">$350/m² + {t('casa', 'house')}</span><span class="d">{t('Frente a calle principal. Terreno a $350/m² más el valor de la casa construida.', 'Fronting the main street. Land at $350/m² plus the value of the existing house.')}</span></div>
+        <div><span class="k">FFM-IB-5</span><span class="v">{t('Precio global', 'Package price')}</span><span class="d">{t('Bodega de 5,500 m² con su terreno, en venta o alquiler.', '5,500 m² warehouse with its land, for sale or lease.')}</span></div>
+      </div></div>
     <div class="filters" data-filter-group="#av-body">
       <button class="f on" data-f="all">{t('Todas', 'All')}</button><button class="f" data-f="sale">{t('En venta', 'For sale')}</button><button class="f" data-f="rent">{t('En alquiler', 'For lease')}</button>
     </div>
@@ -37,7 +41,7 @@ const w = LOTS.ib5;
               <td><span class="badge both">{t('Venta / Alquiler', 'Sale / Lease')}</span></td><td><a class="link-arrow" href={href('lot:ib5', lang)}>{t('Ficha', 'Details')}</a></td></tr>
           ) : (
             <tr data-cat="sale"><td class="id">{v.code}</td><td>{t(v.name_es, v.name_en)}</td><td class="r">{m2(v.lot!)}</td><td class="r">{v.green ? m2(v.green) : '—'}</td><td class="r">{m2(v.total!)}</td>
-              <td class="r pr">{money(v.price)}</td><td class="r">{money(ppm(v))}</td><td><span class="badge">{t('Venta', 'Sale')}</span></td><td><a class="link-arrow" href={href(`lot:${k}`, lang)}>{t('Ficha', 'Details')}</a></td></tr>
+              <td class="r pr">{money(v.price)}{v.kind === 'house' && <><br /><span class="muted" style="font-size:.8rem;font-weight:400">{t('Terreno + casa', 'Land + house')}</span></>}</td><td class="r">{money(ppm(v))}{v.kind === 'house' && <><br /><span class="muted" style="font-size:.8rem">+ {t('casa', 'house')} {money(houseValue(v))}</span></>}</td><td><span class="badge">{t('Venta', 'Sale')}</span></td><td><a class="link-arrow" href={href(`lot:${k}`, lang)}>{t('Ficha', 'Details')}</a></td></tr>
           );
         })}
       </tbody>

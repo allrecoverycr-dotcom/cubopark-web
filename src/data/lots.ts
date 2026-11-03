@@ -13,6 +13,7 @@ export type Lot = {
   green?: number;
   total?: number;
   zv?: string;
+  rate?: number; // precio por m² del terreno (USD)
   built?: number;
   land?: number;
   rent?: number;
@@ -22,20 +23,23 @@ export type Lot = {
 };
 
 export const LOTS: Record<string, Lot> = {
-  ib4: { id: 'ib4', code: 'FFM-IB-4', kind: 'house', name_es: 'Terreno y casa', name_en: 'Land & house', lot: 5452.3, green: 0, total: 5452.3, price: 2200000,
+  ib4: { id: 'ib4', code: 'FFM-IB-4', kind: 'house', name_es: 'Terreno y casa', name_en: 'Land & house', lot: 5452.3, green: 0, total: 5452.3, price: 2200000, rate: 350,
     status_es: 'En venta', status_en: 'For sale', img: 'casa-ib4', imgs: ['casa-ib4', 'casa-ib4-2', 'casa-entorno'] },
   ib5: { id: 'ib5', code: 'FFM-IB-5', kind: 'warehouse', name_es: 'Bodega industrial', name_en: 'Industrial warehouse', built: 5500, land: 4231, price: 5600000, rent: 8, fee: 1,
     status_es: 'Venta o alquiler', status_en: 'Sale or lease', img: 'bodega-aerea' },
-  ib6: { id: 'ib6', code: 'FFM-IB-6', kind: 'lot', name_es: 'Lote industrial', name_en: 'Industrial lot', lot: 3631.08, green: 1839.36, total: 5470.44, price: 1367610, zv: '2',
+  ib6: { id: 'ib6', code: 'FFM-IB-6', kind: 'lot', name_es: 'Lote industrial', name_en: 'Industrial lot', lot: 3631.08, green: 1839.36, total: 5470.44, price: 1367610, zv: '2', rate: 250,
     status_es: 'En venta', status_en: 'For sale', img: 'terreno-aereo', imgs: ['terreno-aereo', 'calle-interna', 'terreno-aereo-2'] },
-  ib7: { id: 'ib7', code: 'FFM-IB-7', kind: 'lot', name_es: 'Lote industrial', name_en: 'Industrial lot', lot: 3769.6, green: 2182.16, total: 5951.76, price: 1487940, zv: '3',
+  ib7: { id: 'ib7', code: 'FFM-IB-7', kind: 'lot', name_es: 'Lote industrial', name_en: 'Industrial lot', lot: 3769.6, green: 2182.16, total: 5951.76, price: 1487940, zv: '3', rate: 250,
     status_es: 'En venta', status_en: 'For sale', img: 'terreno-aereo-2', imgs: ['terreno-aereo-2', 'calle-interna-3', 'terreno-aereo'] },
-  ib8: { id: 'ib8', code: 'FFM-IB-8', kind: 'lot', name_es: 'Lote industrial', name_en: 'Industrial lot', lot: 3208.66, green: 945.47, total: 4154.13, price: 1038532, zv: '4',
+  ib8: { id: 'ib8', code: 'FFM-IB-8', kind: 'lot', name_es: 'Lote industrial', name_en: 'Industrial lot', lot: 3208.66, green: 945.47, total: 4154.13, price: 1038532, zv: '4', rate: 250,
     status_es: 'En venta', status_en: 'For sale', img: 'calle-interna-2', imgs: ['calle-interna-2', 'terreno-aereo', 'calle-interna-3'] },
 };
 
 export const LOT_IDS = ['ib4', 'ib6', 'ib7', 'ib8'];
-export const ppm = (l: Lot) => l.price / (l.total || 1);
+// Precio por m² del terreno (no se divide el precio total: en FFM-IB-4 el total incluye la casa).
+export const ppm = (l: Lot) => l.rate || 0;
+export const landValue = (l: Lot) => (l.rate || 0) * (l.total || 0);
+export const houseValue = (l: Lot) => (l.kind === 'house' ? l.price - landValue(l) : 0);
 export const LAND_TOTAL = LOT_IDS.reduce((s, k) => s + (LOTS[k].total || 0), 0);
 
 export const WAREHOUSE = (() => {

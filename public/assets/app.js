@@ -126,7 +126,8 @@
         rows += '<dt>' + (es ? 'Área de la finca' : 'Lot area') + '</dt><dd>' + fmt(x.lot, 2) + ' m²</dd>';
         if (x.green) rows += '<dt>' + (es ? 'Zona verde A.C.L.R.' : 'A.C.L.R. green zone') + '</dt><dd>' + fmt(x.green, 2) + ' m²</dd>';
         rows += '<dt>' + (es ? 'Área total' : 'Total area') + '</dt><dd>' + fmt(x.total, 2) + ' m²</dd>';
-        rows += '<dt>' + (es ? 'Precio por m²' : 'Price per m²') + '</dt><dd>$' + fmt(x.price / x.total) + '</dd>';
+        rows += '<dt>' + (x.kind === 'house' ? (es ? 'Terreno por m²' : 'Land per m²') : (es ? 'Precio por m²' : 'Price per m²')) + '</dt><dd>$' + fmt(x.rate) + '</dd>';
+        if (x.kind === 'house') rows += '<dt>' + (es ? 'Casa construida' : 'Existing house') + '</dt><dd>$' + fmt(x.price - x.rate * x.total) + '</dd>';
       }
       card.innerHTML = '<div class="id">' + x.code + ' · ' + (es ? x.status_es : x.status_en) + '</div><h3>' + (es ? x.name_es : x.name_en) + '</h3><dl>' + rows + '</dl>' +
         '<div class="pr"><small>' + (es ? 'Precio de venta' : 'Sale price') + '</small>$' + fmt(x.price) + ' <span style="font-size:.4em;letter-spacing:.1em">USD</span></div>' +

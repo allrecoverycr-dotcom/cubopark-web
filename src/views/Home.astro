@@ -30,7 +30,7 @@ const strip = GAL.filter((g) => ['bodega-aerea', 'nave-mezzanine', 'oficina-vidr
         <div class="stat"><div class="v">5,500<small>m²</small></div><div class="k">{t('Bodega construida', 'Built warehouse')}</div></div>
         <div class="stat"><div class="v">4</div><div class="k">{t('Fincas filiales en venta', 'Lots for sale')}</div></div>
         <div class="stat"><div class="v">{Math.round(LAND_TOTAL).toLocaleString('en-US')}<small>m²</small></div><div class="k">{t('De terreno disponible', 'Of available land')}</div></div>
-        <div class="stat"><div class="v">$250<small>/m²</small></div><div class="k">{t('Lotes industriales', 'Industrial lots')}</div></div>
+        <div class="stat"><div class="v">$250<small>/m²</small></div><div class="k">{t('Lotes del fondo · 6, 7 y 8', 'Rear lots · 6, 7 & 8')}</div></div>
       </div>
     </div>
   </section>
@@ -60,7 +60,7 @@ const strip = GAL.filter((g) => ['bodega-aerea', 'nave-mezzanine', 'oficina-vidr
     <a class="path" href={href('availability', lang)}><Img name="entorno-aereo" alt={t('Lotes industriales disponibles', 'Available industrial lots')} sizes="(max-width:820px) 100vw, 50vw" />
       <div class="in"><span class="eyebrow" style="color:var(--sand)">{t('Para invertir', 'To invest')}</span>
         <h2 class="h-l" set:html={t('Lotes desde <b>4,154 m²</b>', 'Lots from <b>4,154 m²</b>')} />
-        <p class="price">{t('Desde', 'From')} {money(1038532)} · $250/m²</p>
+        <p class="price">{t('Lotes del fondo desde', 'Rear lots from')} {money(1038532)} · $250/m² · {t('Frente a calle: $350/m² + casa', 'Street front: $350/m² + house')}</p>
         <span class="link-arrow">{t('Ver lotes', 'See the lots')} <Arrow /></span></div></a>
   </section>
 

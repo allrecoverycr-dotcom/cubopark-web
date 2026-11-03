@@ -5,7 +5,7 @@ import Arrow from '../components/Arrow.astro';
 import Phero from '../components/Phero.astro';
 import Plan from '../components/Plan.astro';
 import LotCard from '../components/LotCard.astro';
-import { LOTS, ppm } from '../data/lots';
+import { LOTS, ppm, landValue, houseValue } from '../data/lots';
 import { SITE } from '../data/site';
 import { useT, href, money, m2, type Lang } from '../i18n';
 const { lang, id } = Astro.props as { lang: Lang; id: string };
@@ -17,7 +17,7 @@ const pct = v.green ? (v.lot! / v.total!) * 100 : 100;
 const total0 = Math.round(v.total!).toLocaleString('en-US');
 const contact = href('contact', lang) + '?interes=' + id;
 const desc = isHouse
-  ? t('La finca FFM-IB-4 está a la entrada del condominio, con frente a la calle pública. Incluye una casa existente con jardines y árboles maduros. Por su ubicación funciona para oficinas corporativas, showroom con exhibición o un desarrollo industrial de frente a calle.', 'Lot FFM-IB-4 sits at the condominium entrance, fronting the public street. It includes an existing house with mature gardens and trees. Its position suits corporate offices, a showroom or a street-front industrial development.')
+  ? t('La finca FFM-IB-4 está a la entrada del condominio, con frente a la calle pública. Incluye una casa existente con jardines y árboles maduros. Por su ubicación funciona para oficinas corporativas, showroom con exhibición o un desarrollo industrial de frente a calle. El terreno se cotiza a $350 por m², más el valor de la casa.', 'Lot FFM-IB-4 sits at the condominium entrance, fronting the public street. It includes an existing house with mature gardens and trees. Its position suits corporate offices, a showroom or a street-front industrial development. The land is priced at $350 per m², plus the value of the house.')
   : t(`La finca ${v.code} tiene ${m2(v.lot!)} de área útil con frente a la calle interna del condominio, más ${m2(v.green!)} de zona verde A.C.L.R. asignada (zona verde ${v.zv}). Está destinada a uso industrial, bodegas, ofibodegas y oficinas, con acceso directo a la infraestructura común.`,
       `Lot ${v.code} has ${m2(v.lot!)} of usable area facing the condominium’s internal road, plus ${m2(v.green!)} of assigned A.C.L.R. green zone (green zone ${v.zv}). It is designated for industrial, warehouse, flex-space and office use, with direct access to the shared infrastructure.`);
 const kind = isHouse ? t('Terreno y casa', 'Land & house') : t('Lote industrial', 'Industrial lot');
@@ -38,7 +38,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: `${v.code
         <div><div class="v">{m2(v.lot!)}</div><div class="k">{t('Área de la finca', 'Lot area')}</div></div>
         <div><div class="v">{v.green ? m2(v.green) : '—'}</div><div class="k">{t('Zona verde A.C.L.R.', 'A.C.L.R. green zone')}</div></div>
         <div><div class="v">{m2(v.total!)}</div><div class="k">{t('Área total', 'Total area')}</div></div>
-        <div><div class="v">{money(ppm(v))}</div><div class="k">{t('Precio por m²', 'Price per m²')}</div></div>
+        <div><div class="v">{money(ppm(v))}</div><div class="k">{isHouse ? t('Precio por m² del terreno', 'Land price per m²') : t('Precio por m²', 'Price per m²')}</div></div>
         <div><div class="v">Industrial</div><div class="k">{t('Uso', 'Use')}</div></div>
         <div><div class="v">{isHouse ? t('Calle pública', 'Public street') : t('Calle interna', 'Internal road')}</div><div class="k">{t('Frente', 'Frontage')}</div></div>
       </div></div>
@@ -61,7 +61,15 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: `${v.code
     <aside class="pricebox">
       <div class="k">{v.code} · {t(v.status_es, v.status_en)}</div>
       <div class="v num">{money(v.price)}</div>
-      <div class="sub">USD · {m2(v.total!)} · {money(ppm(v))}/m²</div>
+      {isHouse ? (
+        <div class="breakdown">
+          <div><span>{t('Terreno', 'Land')} · {m2(v.total!)} × {money(ppm(v))}</span><span>{money(landValue(v))}</span></div>
+          <div><span>{t('Casa construida', 'Existing house')}</span><span>{money(houseValue(v))}</span></div>
+          <div class="tot"><span>{t('Total terreno y casa', 'Total land & house')}</span><span>{money(v.price)}</span></div>
+        </div>
+      ) : (
+        <div class="sub">USD · {m2(v.total!)} × {money(ppm(v))}/m²</div>
+      )}
       <hr />
       <a class="btn btn-red" href={contact}>{t('Solicitar información', 'Request information')} <Arrow /></a>
       <a class="btn btn-ghost" href={contact}>{t('Agendar visita', 'Book a tour')}</a>

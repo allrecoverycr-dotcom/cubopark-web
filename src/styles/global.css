@@ -460,3 +460,10 @@ table.av{width:100%;border-collapse:collapse;min-width:880px;font-variant-numeri
 .cta-strip .t b{font-weight:600}
 .tbl-wrap{position:relative}
 @media (max-width:520px){.btn{white-space:normal;text-align:center}}
+.price-rules{display:grid;gap:0;border-top:1px solid var(--char)}
+.price-rules>div{display:grid;grid-template-columns:130px auto;gap:2px 16px;padding:14px 0;border-bottom:1px solid var(--line-l);align-items:baseline}
+.price-rules .k{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--red)}
+.price-rules .v{font-size:1.15rem;font-weight:500}
+.price-rules .d{grid-column:2;font-size:.85rem;color:var(--gray)}
+@media (max-width:480px){.price-rules>div{grid-template-columns:1fr}.price-rules .d{grid-column:1}}
+.pricebox .breakdown{margin-top:4px}
