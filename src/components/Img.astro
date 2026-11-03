@@ -1,0 +1,6 @@
+---
+// Imagen responsiva con WebP pre-optimizado en dos tamaños (900 y 2000 px).
+const { name, alt = '', cls = '', eager = false, sizes = '100vw', w = 2000, h = 1333 } = Astro.props;
+---
+<img class={cls || undefined} src={`/img/${name}.webp`} srcset={`/img/${name}-sm.webp 900w, /img/${name}.webp 2000w`} sizes={sizes}
+  width={w} height={h} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding={eager ? undefined : 'async'} fetchpriority={eager ? 'high' : undefined} />

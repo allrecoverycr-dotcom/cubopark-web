@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Arrow from '../components/Arrow.astro';
+import Phero from '../components/Phero.astro';
+import { LOTS, WAREHOUSE, CAP } from '../data/lots';
+import { SITE } from '../data/site';
+import { useT, href, money, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = useT(lang);
+const w = LOTS.ib5;
+const gal = ['nave-panoramica', 'nave-mezzanine', 'nave-oficinas', 'oficina-vidrio', 'pasarela', 'oficina-amplia', 'recepcion', 'escalera', 'nave-amplia'];
+const contact = href('contact', lang) + '?interes=bodega';
+const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: 'Bodega industrial FFM-IB-5 · Cubo Park', price: w.price, priceCurrency: 'USD', url: SITE.domain + href('warehouse', lang),
+  itemOffered: { '@type': 'Place', name: 'FFM-IB-5', address: { '@type': 'PostalAddress', addressLocality: 'San Rafael', addressRegion: 'Alajuela', addressCountry: 'CR' } } };
+---
+<Base lang={lang} route="warehouse" image="bodega-aerea" jsonld={ld}
+  title={t('Bodega industrial de 5,500 m² en venta o alquiler | Cubo Park', '5,500 m² Industrial Warehouse for Sale or Lease | Cubo Park')}
+  description={t('Bodega de 5,500 m² con mezzanines y oficinas en San Rafael de Alajuela. Alquiler a $8/m² + IVA o venta en US$5,600,000.', '5,500 m² warehouse with mezzanines and offices in San Rafael, Alajuela. Lease at $8/m² + VAT or buy for US$5,600,000.')}>
+  <Phero lang={lang} img="bodega-aerea" crumbs={[[t('Disponibilidad', 'Availability'), href('availability', lang)], ['FFM-IB-5']]}
+    h1={t('Bodega industrial <b>de 5,500 m²</b>', 'Industrial warehouse, <b>5,500 m²</b>')}
+    lead={t('Nave de estructura metálica con mezzanines, oficinas en dos niveles y estacionamientos propios. Disponible para venta o alquiler.', 'Steel-frame hall with mezzanines, two-level offices and its own parking. Available for sale or lease.')} />
+
+  <section class="sec light"><div class="wrap ficha">
+    <div>
+      <div class="block"><div class="facts num">
+        <div><div class="v">5,500 m²</div><div class="k">{t('Construcción', 'Building area')}</div></div>
+        <div><div class="v">4,231 m²</div><div class="k">{t('Terreno (catastro)', 'Land (cadastral)')}</div></div>
+        <div><div class="v">2</div><div class="k">{t('Niveles de mezzanine', 'Mezzanine levels')}</div></div>
+        <div><div class="v">$8/m²</div><div class="k">{t('Alquiler + IVA', 'Lease + VAT')}</div></div>
+        <div><div class="v">$1/m²</div><div class="k">{t('Mantenimiento', 'Maintenance')}</div></div>
+        <div><div class="v">FFM-IB-5</div><div class="k">{t('Finca filial', 'Lot number')}</div></div>
+      </div></div>
+      <div class="block"><h2>{t('Descripción', 'Overview')}</h2><div class="prose">
+        <p>{t('La bodega de Cubo Park ocupa la finca filial FFM-IB-5, en el centro del condominio. Su nave principal ofrece un piso amplio y libre, rodeado por mezzanines metálicos en dos niveles con pasarelas y barandas de vidrio que conectan las áreas de oficina.', 'Cubo Park’s warehouse sits on lot FFM-IB-5, at the center of the condominium. The main hall offers a wide, open floor surrounded by two levels of steel mezzanines with glass-railed walkways linking the office areas.')}</p>
+        <p>{t('Incluye oficinas con cerramiento de vidrio, recepción, áreas de servicio, cortinas de acceso vehicular, ventilación natural por celosías y lucernarios en la cubierta. Funciona para centro de distribución, manufactura liviana, showroom o sede corporativa con operación.', 'It includes glass-enclosed offices, a reception, service areas, roll-up vehicle doors, natural ventilation through louvers and roof skylights. It suits a distribution center, light manufacturing, a showroom or a corporate headquarters with operations.')}</p>
+      </div></div>
+      <div class="block"><h2>{t('Recorrido panorámico', 'Panoramic walkthrough')}</h2><p class="muted" style="font-size:.88rem">{t('Arrastre para recorrer la nave.', 'Drag to look around the hall.')}</p>
+        <div class="pano"><img src="/img/nave-panoramica.webp" width="2000" height="600" alt={t('Panorámica interior de la nave', 'Panoramic view of the hall')} loading="lazy" decoding="async" /></div></div>
+      <div class="block"><h2>{t('Especificaciones', 'Specifications')}</h2>
+        <ul class="feat" style="margin-top:0">
+          <li><Icon name="cube" />{t('Nave de estructura metálica de gran luz', 'Long-span steel-frame hall')}</li>
+          <li><Icon name="stairs" />{t('Mezzanines en dos niveles con pasarelas', 'Two mezzanine levels with walkways')}</li>
+          <li><Icon name="office" />{t('Oficinas en planta baja y segundo nivel', 'Ground- and second-floor offices')}</li>
+          <li><Icon name="gate" />{t('Cortinas enrollables de acceso vehicular', 'Roll-up vehicle doors')}</li>
+          <li><Icon name="wind" />{t('Ventilación natural por celosías', 'Natural ventilation through louvers')}</li>
+          <li><Icon name="light" />{t('Lucernarios e iluminación industrial', 'Skylights and industrial lighting')}</li>
+          <li><Icon name="fire" />{t('Red y gabinetes contra incendio', 'Fire main and hose cabinets')}</li>
+          <li><Icon name="park" />{t('Estacionamientos frontales', 'Front parking')}</li>
+          <li><Icon name="truck" />{t('Altura libre:', 'Clear height:')} <span class="ph">{t('por confirmar', 'TBC')}</span></li>
+          <li><Icon name="light" />{t('Capacidad eléctrica:', 'Power capacity:')} <span class="ph">{t('por confirmar', 'TBC')}</span></li>
+        </ul></div>
+      <div class="block"><h2>{t('Galería', 'Gallery')}</h2>
+        <div class="mini-gal">{gal.map((n, i) => <div class={i === 0 ? 'big' : undefined} data-lb="bodega" data-full={`/img/${n}.webp`} data-cap={t(CAP[n][0], CAP[n][1])}><Img name={n} alt={t(CAP[n][0], CAP[n][1])} sizes="33vw" /></div>)}</div></div>
+      <div class="block"><h2>{t('Plano catastrado', 'Cadastral survey')}</h2>
+        <div class="docs"><img src="/img/plano-ffm-ib-5.webp" width="1386" height="1906" alt={t('Plano catastrado FFM-IB-5', 'Cadastral survey FFM-IB-5')} data-lb="plano" data-full="/img/plano-ffm-ib-5.webp" loading="lazy" />
+          <div><h3 style="font-weight:500;font-size:1.1rem">FFM-IB-5</h3><p class="muted" style="margin-top:8px">{t('Área según plano catastrado: 4,231 m².', 'Area per cadastral survey: 4,231 m².')}</p>
+            <a class="link-arrow" style="margin-top:16px" href="/docs/plano-catastrado-ffm-ib-5.pdf" target="_blank" rel="noopener">{t('Descargar PDF', 'Download PDF')} <Arrow /></a></div></div></div>
+    </div>
+    <aside class="pricebox">
+      <div class="tabs" data-tabs><button class="on" data-t="rent">{t('Alquiler', 'Lease')}</button><button data-t="sale">{t('Venta', 'Sale')}</button></div>
+      <div data-pane="rent">
+        <div class="k">{t('Total mensual estimado', 'Estimated monthly total')}</div>
+        <div class="v num" style="margin-top:10px">{money(WAREHOUSE.total)}</div>
+        <div class="breakdown" style="margin-top:22px">
+          <div><span>{t('Renta · 5,500 m² × $8', 'Rent · 5,500 m² × $8')}</span><span>{money(WAREHOUSE.rent)}</span></div>
+          <div><span>{t('IVA 13%', 'VAT 13%')}</span><span>{money(WAREHOUSE.iva)}</span></div>
+          <div><span>{t('Mantenimiento · $1/m²', 'Maintenance · $1/m²')}</span><span>{money(WAREHOUSE.fee)}</span></div>
+          <div class="tot"><span>{t('Total por mes', 'Monthly total')}</span><span>{money(WAREHOUSE.total)}</span></div>
+        </div>
+      </div>
+      <div data-pane="sale" hidden>
+        <div class="k">{t('Precio de venta', 'Sale price')}</div>
+        <div class="v num" style="margin-top:10px">{money(w.price)}</div>
+        <div class="sub" style="margin-top:12px">{t('Bodega de 5,500 m² sobre terreno de 4,231 m². Precio en USD.', '5,500 m² warehouse on 4,231 m² of land. Price in USD.')}</div>
+      </div>
+      <hr />
+      <a class="btn btn-red" href={contact}>{t('Solicitar información', 'Request information')} <Arrow /></a>
+      <a class="btn btn-ghost" href={contact}>{t('Agendar visita', 'Book a tour')}</a>
+    </aside>
+  </div></section>
+</Base>

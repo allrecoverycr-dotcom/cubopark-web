@@ -1,0 +1,17 @@
+---
+import Img from './Img.astro';
+import { useT, href, type Lang } from '../i18n';
+const { lang, img, crumbs = [], h1, lead } = Astro.props as { lang: Lang; img: string; crumbs?: [string, string?][]; h1: string; lead?: string };
+const t = useT(lang);
+---
+<section class="phero">
+  <div class="phero-bg"><Img name={img} eager /></div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label={t('Ruta', 'Breadcrumb')}>
+      <a href={href('home', lang)}>{t('Inicio', 'Home')}</a>
+      {crumbs.map(([label, url]) => (<><span>/</span>{url ? <a href={url}>{label}</a> : <span>{label}</span>}</>))}
+    </nav>
+    <h1 class="h-xl" style="margin-top:28px" set:html={h1} />
+    {lead && <p class="lead" set:html={lead} />}
+  </div>
+</section>

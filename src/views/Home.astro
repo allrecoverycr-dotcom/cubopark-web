@@ -1,0 +1,96 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Arrow from '../components/Arrow.astro';
+import Plan from '../components/Plan.astro';
+import LotCard from '../components/LotCard.astro';
+import { GAL, LAND_TOTAL } from '../data/lots';
+import { useT, href, money, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = useT(lang);
+const strip = GAL.filter((g) => ['bodega-aerea', 'nave-mezzanine', 'oficina-vidrio', 'bodega-calle', 'nave-oficinas', 'calle-interna', 'escalera', 'bodega-fachada'].includes(g[0]));
+---
+<Base lang={lang} route="home" image="vista-lateral"
+  title={t('Cubo Park Condominio | Lotes industriales y bodega en Alajuela', 'Cubo Park Condominio | Industrial lots & warehouse in Alajuela, Costa Rica')}
+  description={t('Lotes industriales con título propio y bodega de 5,500 m² en venta o alquiler en San Rafael de Alajuela, cerca de Lindora y Ruta 27. Precios en USD.', 'Independently titled industrial lots and a 5,500 m² warehouse for sale or lease in San Rafael, Alajuela, near Lindora and Route 27. Prices in USD.')}>
+
+  <section class="hero">
+    <div class="hero-bg"><Img name="aerial-panorama" alt={t('Vista aérea de Cubo Park en San Rafael de Alajuela', 'Aerial view of Cubo Park in San Rafael, Alajuela')} eager /></div>
+    <div class="wrap">
+      <span class="eyebrow" style="color:var(--sand)">{t('Condominio industrial · San Rafael, Alajuela', 'Industrial condominium · San Rafael, Alajuela')}</span>
+      <h1 class="h-xl" set:html={t('Espacio para que su operación <b>crezca.</b>', 'Room for your operation <b>to grow.</b>')} />
+      <p class="lead">{t('Lotes industriales con título propio y una bodega de 5,500 m² lista para operar, dentro de un condominio con calle interna, planta de tratamiento y zonas verdes. A minutos de Lindora y la Ruta 27.', 'Independently titled industrial lots and a 5,500 m² warehouse ready to operate, inside a condominium with its own internal road, treatment plant and green areas. Minutes from Lindora and Route 27.')}</p>
+      <div class="hero-ctas">
+        <a class="btn btn-red" href={href('availability', lang)}>{t('Ver disponibilidad', 'View availability')} <Arrow /></a>
+        <a class="btn btn-ghost" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a>
+      </div>
+      <div class="stats num">
+        <div class="stat"><div class="v">5,500<small>m²</small></div><div class="k">{t('Bodega construida', 'Built warehouse')}</div></div>
+        <div class="stat"><div class="v">4</div><div class="k">{t('Fincas filiales en venta', 'Lots for sale')}</div></div>
+        <div class="stat"><div class="v">{Math.round(LAND_TOTAL).toLocaleString('en-US')}<small>m²</small></div><div class="k">{t('De terreno disponible', 'Of available land')}</div></div>
+        <div class="stat"><div class="v">$250<small>/m²</small></div><div class="k">{t('Lotes industriales', 'Industrial lots')}</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec light"><div class="wrap split2">
+    <div class="frame rv"><Img name="bodega-acceso" alt={t('Acceso principal de la bodega', 'Warehouse main entrance')} sizes="(max-width:900px) 100vw, 50vw" />
+      <div class="tag"><div class="v num">FFM-IB-5</div><div class="k">{t('Venta o alquiler', 'Sale or lease')}</div></div></div>
+    <div class="rv"><span class="eyebrow">{t('El condominio', 'The condominium')}</span>
+      <h2 class="h-l" style="margin-top:22px" set:html={t('Infraestructura terminada. <b>Solo falta su empresa.</b>', 'Infrastructure in place. <b>Your company is next.</b>')} />
+      <p class="lead" style="margin-top:24px">{t('Cubo Park es un condominio industrial y de bodegas de fincas filiales. Cada finca tiene su propio plano catastrado y se compra con título independiente, con el respaldo de áreas comunes ya construidas.', 'Cubo Park is an industrial and warehouse condominium made up of independent lots. Each lot has its own cadastral survey and is sold with its own title, backed by common areas that are already built.')}</p>
+      <ul class="feat">
+        <li><Icon name="road" />{t('Calle interna asfaltada con acceso vehicular', 'Paved internal road with vehicle access')}</li>
+        <li><Icon name="drop" />{t('Planta de tratamiento y laguna de retención', 'Treatment plant and retention pond')}</li>
+        <li><Icon name="doc" />{t('Uso industrial, bodegas, ofibodegas y oficinas', 'Zoned for industry, warehouses, flex space and offices')}</li>
+        <li><Icon name="leaf" />{t('Zonas verdes y protección del río Bermúdez', 'Green areas and Bermúdez River buffer')}</li>
+      </ul>
+      <a class="link-arrow" style="margin-top:36px" href={href('project', lang)}>{t('Conocer el proyecto', 'About the project')} <Arrow /></a>
+    </div>
+  </div></section>
+
+  <section class="paths">
+    <a class="path" href={href('warehouse', lang)}><Img name="nave-panoramica" alt={t('Interior de la bodega', 'Warehouse interior')} sizes="(max-width:820px) 100vw, 50vw" />
+      <div class="in"><span class="eyebrow" style="color:var(--sand)">{t('Para operar', 'To operate')}</span>
+        <h2 class="h-l" set:html={t('Bodega de <b>5,500 m²</b>', 'A <b>5,500 m²</b> warehouse')} />
+        <p class="price">{t('Alquiler desde $8/m² · Venta ', 'Lease from $8/m² · Sale ')}{money(5600000)}</p>
+        <span class="link-arrow">{t('Ver la bodega', 'See the warehouse')} <Arrow /></span></div></a>
+    <a class="path" href={href('availability', lang)}><Img name="entorno-aereo" alt={t('Lotes industriales disponibles', 'Available industrial lots')} sizes="(max-width:820px) 100vw, 50vw" />
+      <div class="in"><span class="eyebrow" style="color:var(--sand)">{t('Para invertir', 'To invest')}</span>
+        <h2 class="h-l" set:html={t('Lotes desde <b>4,154 m²</b>', 'Lots from <b>4,154 m²</b>')} />
+        <p class="price">{t('Desde', 'From')} {money(1038532)} · $250/m²</p>
+        <span class="link-arrow">{t('Ver lotes', 'See the lots')} <Arrow /></span></div></a>
+  </section>
+
+  <section class="sec dark"><div class="wrap">
+    <div class="sec-head split"><div><span class="eyebrow">{t('Master plan', 'Master plan')}</span>
+      <h2 class="h-l" style="margin-top:22px" set:html={t('Elija su finca <b>sobre el plano.</b>', 'Choose your lot <b>on the plan.</b>')} /></div>
+      <p class="lead">{t('Cinco fincas filiales disponibles sobre la fotografía aérea real del condominio. Áreas tomadas de los planos catastrados.', 'Five lots available, drawn over a real aerial photo of the condominium. Areas taken from the cadastral surveys.')}</p></div>
+    <Plan lang={lang} selected="ib7" />
+  </div></section>
+
+  <section class="sec light"><div class="wrap">
+    <div class="sec-head split"><div><span class="eyebrow">{t('Disponibilidad', 'Availability')}</span>
+      <h2 class="h-l" style="margin-top:22px" set:html={t('Fincas <b>disponibles</b>', 'Available <b>lots</b>')} /></div>
+      <div style="justify-self:end"><a class="btn btn-line" href={href('availability', lang)}>{t('Comparar todas', 'Compare all')} <Arrow /></a></div></div>
+    <div class="cards">{['ib5', 'ib6', 'ib7', 'ib8'].map((id) => <LotCard id={id} lang={lang} />)}</div>
+  </div></section>
+
+  <section class="sec white">
+    <div class="wrap"><div class="sec-head split"><div><span class="eyebrow">{t('Galería', 'Gallery')}</span>
+      <h2 class="h-l" style="margin-top:22px" set:html={t('Recorra <b>el proyecto</b>', 'Walk <b>the project</b>')} /></div>
+      <div style="justify-self:end"><a class="link-arrow" href={href('gallery', lang)}>{t('Ver galería completa', 'Full gallery')} <Arrow /></a></div></div></div>
+    <div class="wrap"><div class="gal-strip">
+      {strip.map(([n, , es, en]) => <figure data-lb="home" data-full={`/img/${n}.webp`} data-cap={t(es, en)}><Img name={n} alt={t(es, en)} sizes="34vw" /></figure>)}
+    </div></div>
+  </section>
+
+  <section class="sec char"><div class="wrap loc-grid">
+    <div class="rv"><span class="eyebrow">{t('Ubicación', 'Location')}</span>
+      <h2 class="h-l" style="margin-top:22px" set:html={t('En el corredor industrial <b>del oeste.</b>', 'In the western <b>industrial corridor.</b>')} />
+      <p class="lead" style="margin-top:24px;color:rgba(255,255,255,.72)">{t('Calle Potrerillos, San Rafael de Alajuela. Conexión con Radial Lindora y Ruta 27, rodeado de parques empresariales, centros de distribución y servicios.', 'Calle Potrerillos, San Rafael, Alajuela. Connected to Radial Lindora and Route 27, surrounded by business parks, distribution centers and services.')}</p>
+      <a class="btn btn-ghost" style="margin-top:36px" href={href('location', lang)}>{t('Ver ubicación', 'View location')} <Arrow /></a></div>
+    <div class="rv"><Img name="entorno-aereo-2" alt={t('Entorno del condominio', 'Condominium surroundings')} sizes="(max-width:900px) 100vw, 50vw" /></div>
+  </div></section>
+</Base>

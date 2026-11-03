@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Arrow from '../components/Arrow.astro';
+import Phero from '../components/Phero.astro';
+import { SITE } from '../data/site';
+import { useT, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = useT(lang);
+// Tiempos aproximados: completar cuando estén confirmados (ej. '5 min').
+const acc: [string, string, string][] = [['Radial Lindora', 'Radial Lindora', ''], ['Ruta 27', 'Route 27', ''], ['Lindora y Santa Ana', 'Lindora & Santa Ana', ''], ['El Coyol', 'El Coyol', ''], ['Aeropuerto Juan Santamaría', 'Juan Santamaría Airport', '']];
+---
+<Base lang={lang} route="location" image="entorno-aereo-2"
+  title={t('Ubicación | Cubo Park, San Rafael de Alajuela', 'Location | Cubo Park, San Rafael, Alajuela')}
+  description={t('Cubo Park está en Calle Potrerillos, San Rafael de Alajuela, con acceso a Radial Lindora y Ruta 27.', 'Cubo Park is on Calle Potrerillos, San Rafael, Alajuela, with access to Radial Lindora and Route 27.')}>
+  <Phero lang={lang} img="entorno-aereo-2" crumbs={[[t('Ubicación', 'Location')]]}
+    h1={t('Conectado con <b>el oeste del Valle Central</b>', 'Connected to <b>the western Central Valley</b>')}
+    lead={t('Calle Potrerillos, San Rafael de Alajuela, en una zona industrial consolidada con acceso a Radial Lindora y Ruta 27.', 'Calle Potrerillos, San Rafael, Alajuela, in an established industrial area with access to Radial Lindora and Route 27.')} />
+  <section class="sec char"><div class="wrap loc-grid">
+    <div class="rv"><span class="eyebrow">{t('Dirección', 'Address')}</span>
+      <p class="addr" style="margin-top:22px">Cubo Park Condominio<br />Calle Potrerillos, San Rafael<br />Alajuela, Costa Rica</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:34px">
+        <a class="btn btn-red" href={SITE.maps} target="_blank" rel="noopener">{t('Abrir en Google Maps', 'Open in Google Maps')} <Arrow /></a>
+        <a class="btn btn-ghost" href={SITE.waze} target="_blank" rel="noopener">Waze</a></div></div>
+    <div class="rv"><span class="eyebrow">{t('Conexiones', 'Connections')}</span>
+      <div class="access num" style="margin-top:22px">{acc.map(([es, en, min]) => <div><span>{t(es, en)}</span>{min ? <span>{min}</span> : <span class="ph">{t('min por confirmar', 'min TBC')}</span>}</div>)}</div></div>
+  </div></section>
+  <section class="sec light"><div class="wrap split2">
+    <div class="frame rv"><Img name="aerial-panorama" alt={t('Vista del entorno de Cubo Park', 'View of Cubo Park surroundings')} sizes="(max-width:900px) 100vw, 50vw" /></div>
+    <div class="rv"><span class="eyebrow">{t('El entorno', 'The area')}</span>
+      <h2 class="h-l" style="margin-top:22px" set:html={t('Rodeado de <b>industria y servicios</b>', 'Surrounded by <b>industry and services</b>')} />
+      <p class="lead" style="margin-top:24px">{t('Cubo Park colinda con parques de bodegas, centros de distribución y empresas de servicios. El sector concentra mano de obra calificada, proveedores y conexión rápida con las principales rutas nacionales.', 'Cubo Park borders warehouse parks, distribution centers and service companies. The area offers skilled labor, suppliers and quick links to the main national highways.')}</p>
+      <ul class="feat">
+        <li><Icon name="pin" />{t('Zona industrial del oeste', 'Western industrial zone')}</li>
+        <li><Icon name="truck" />{t('Acceso para carga pesada', 'Heavy-truck access')}</li>
+        <li><Icon name="shield" />{t('Condominio con acceso controlado', 'Controlled-access condominium')}</li>
+        <li><Icon name="leaf" />{t('Colinda con el río Bermúdez', 'Borders the Bermúdez River')}</li>
+      </ul></div>
+  </div></section>
+</Base>

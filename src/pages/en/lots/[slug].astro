@@ -1,0 +1,9 @@
+---
+import Lot from '../../../views/Lot.astro';
+import { LOT_IDS } from '../../../data/lots';
+export function getStaticPaths() {
+  return LOT_IDS.map((id) => ({ params: { slug: 'ffm-ib-' + id.slice(2) }, props: { id } }));
+}
+const { id } = Astro.props;
+---
+<Lot lang="en" id={id} />

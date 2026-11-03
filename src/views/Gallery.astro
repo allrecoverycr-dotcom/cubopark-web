@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import Phero from '../components/Phero.astro';
+import { GAL } from '../data/lots';
+import { useT, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = useT(lang);
+const cats: [string, string, string][] = [['all', 'Todas', 'All'], ['aerea', 'Aéreas', 'Aerial'], ['exterior', 'Exterior', 'Exterior'], ['interior', 'Nave', 'Warehouse hall'], ['oficinas', 'Oficinas', 'Offices'], ['terreno', 'Terrenos', 'Land']];
+---
+<Base lang={lang} route="gallery" image="nave-mezzanine"
+  title={t('Galería | Cubo Park Condominio', 'Gallery | Cubo Park Condominio')}
+  description={t('Fotografías aéreas e interiores de la bodega y los lotes industriales de Cubo Park en San Rafael de Alajuela.', 'Aerial and interior photos of the warehouse and industrial lots at Cubo Park in San Rafael, Alajuela.')}>
+  <Phero lang={lang} img="nave-mezzanine" crumbs={[[t('Galería', 'Gallery')]]}
+    h1={t('Galería <b>del proyecto</b>', 'Project <b>gallery</b>')}
+    lead={t('Fotografía aérea, interiores de la bodega y los lotes disponibles.', 'Aerial photography, warehouse interiors and the available lots.')} />
+  <section class="sec light"><div class="wrap">
+    <div class="filters" data-filter-group="#gal">{cats.map(([c, es, en]) => <button class={c === 'all' ? 'f on' : 'f'} data-f={c}>{t(es, en)}</button>)}</div>
+    <div class="masonry" id="gal">
+      {GAL.map(([n, c, es, en]) => <figure data-cat={c} data-lb="gal" data-full={`/img/${n}.webp`} data-cap={t(es, en)}><Img name={n} alt={t(es, en)} sizes="(max-width:700px) 100vw, 33vw" /><figcaption>{t(es, en)}</figcaption></figure>)}
+    </div>
+  </div></section>
+</Base>

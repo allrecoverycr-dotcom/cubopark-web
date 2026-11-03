@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import Phero from '../components/Phero.astro';
+import Ph from '../components/Ph.astro';
+import { SITE } from '../data/site';
+import { useT, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = useT(lang);
+const opts: [string, string, string][] = [['bodega-alquiler', 'Bodega FFM-IB-5 · Alquiler', 'Warehouse FFM-IB-5 · Lease'], ['bodega', 'Bodega FFM-IB-5 · Compra', 'Warehouse FFM-IB-5 · Purchase'],
+  ['ib4', 'FFM-IB-4 · Terreno y casa', 'FFM-IB-4 · Land & house'], ['ib6', 'FFM-IB-6 · Lote industrial', 'FFM-IB-6 · Industrial lot'],
+  ['ib7', 'FFM-IB-7 · Lote industrial', 'FFM-IB-7 · Industrial lot'], ['ib8', 'FFM-IB-8 · Lote industrial', 'FFM-IB-8 · Industrial lot'], ['otro', 'Otro', 'Other']];
+---
+<Base lang={lang} route="contact" image="bodega-fachada"
+  title={t('Contacto | Cubo Park Condominio', 'Contact | Cubo Park Condominio')}
+  description={t('Solicite información o agende una visita a los lotes industriales y la bodega de Cubo Park en San Rafael de Alajuela.', 'Request information or book a tour of the industrial lots and warehouse at Cubo Park in San Rafael, Alajuela.')}>
+  <Phero lang={lang} img="bodega-fachada" crumbs={[[t('Contacto', 'Contact')]]}
+    h1={t('Hablemos de <b>su próximo espacio</b>', 'Let’s talk about <b>your next space</b>')}
+    lead={t('Déjenos sus datos y le enviamos información detallada o coordinamos una visita al condominio.', 'Leave your details and we’ll send full information or set up a tour of the condominium.')} />
+  <section class="sec light"><div class="wrap ficha">
+    <div>
+      <form id="lead" class="form" action="/contacto.php" method="post" novalidate>
+        <input type="hidden" name="idioma" value={lang} />
+        <div class="hp" aria-hidden="true"><label for="f-web">Web</label><input id="f-web" name="web" tabindex="-1" autocomplete="off" /></div>
+        <div class="field full"><label for="f-int">{t('Me interesa', 'I’m interested in')}</label>
+          <select id="f-int" name="interes">{opts.map(([v, es, en]) => <option value={v}>{t(es, en)}</option>)}</select></div>
+        <div class="field"><label for="f-name">{t('Nombre completo', 'Full name')} *</label><input id="f-name" name="nombre" required autocomplete="name" /></div>
+        <div class="field"><label for="f-co">{t('Empresa', 'Company')}</label><input id="f-co" name="empresa" autocomplete="organization" /></div>
+        <div class="field"><label for="f-mail">{t('Correo electrónico', 'Email')} *</label><input id="f-mail" name="correo" type="email" required autocomplete="email" /></div>
+        <div class="field"><label for="f-tel">{t('Teléfono / WhatsApp', 'Phone / WhatsApp')} *</label><input id="f-tel" name="telefono" type="tel" required autocomplete="tel" /></div>
+        <div class="field full"><label for="f-msg">{t('Mensaje', 'Message')}</label><textarea id="f-msg" name="mensaje" placeholder={t('Cuéntenos qué tipo de operación tiene y qué área necesita.', 'Tell us about your operation and the space you need.')}></textarea></div>
+        <p class="err full" hidden>{t('Complete su nombre, un correo válido y un teléfono.', 'Please enter your name, a valid email and a phone number.')}</p>
+        <p class="err full send-err" hidden>{t('No pudimos enviar su solicitud. Escríbanos por WhatsApp o intente de nuevo.', 'We couldn’t send your request. Message us on WhatsApp or try again.')}</p>
+        <div class="full"><button class="btn btn-red" type="submit">{t('Enviar solicitud', 'Send request')} <Arrow /></button></div>
+      </form>
+      <div id="lead-ok" class="ok" hidden><span class="eyebrow">{t('Solicitud recibida', 'Request received')}</span>
+        <h2 class="h-m">{t('Gracias. Le contactaremos pronto.', 'Thank you. We’ll be in touch soon.')}</h2></div>
+    </div>
+    <aside class="pricebox contact-side">
+      <div class="it"><span class="k">WhatsApp</span><span class="v"><Ph>{SITE.contact.phone}</Ph></span></div>
+      <div class="it"><span class="k">{t('Correo', 'Email')}</span><span class="v"><Ph>{SITE.contact.email}</Ph></span></div>
+      <div class="it"><span class="k">{t('Horario de visitas', 'Tour hours')}</span><span class="v"><Ph>{t(SITE.contact.hours_es, SITE.contact.hours_en)}</Ph></span></div>
+      <div class="it" style="border:0;padding:0"><span class="k">{t('Dirección', 'Address')}</span><span class="v">Calle Potrerillos, San Rafael, Alajuela</span></div>
+      <a class="btn btn-red" href={`https://wa.me/${SITE.contact.whatsapp}`} target="_blank" rel="noopener">{t('Escribir por WhatsApp', 'Message on WhatsApp')}</a>
+    </aside>
+  </div></section>
+</Base>

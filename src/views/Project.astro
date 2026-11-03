@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Arrow from '../components/Arrow.astro';
+import Phero from '../components/Phero.astro';
+import { LOTS } from '../data/lots';
+import { useT, href, m2, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = useT(lang);
+const specs: [string, string, string, string, string][] = [
+  ['road', 'Calle interna', 'Internal road', 'Acceso vehicular asfaltado con cordón y caño que recorre todo el condominio, desde la calle pública hasta el último lote.', 'Paved vehicle access with curbs running the full length of the condominium, from the public street to the last lot.'],
+  ['drop', 'Planta de tratamiento', 'Treatment plant', 'Planta de tratamiento de aguas residuales común, ubicada en el extremo norte del terreno.', 'Shared wastewater treatment plant at the north end of the property.'],
+  ['layers', 'Laguna de retención', 'Retention pond', 'Laguna de retención pluvial impermeabilizada que regula la escorrentía del condominio.', 'Lined stormwater retention pond that regulates runoff from the condominium.'],
+  ['leaf', 'Zonas verdes', 'Green areas', 'Zonas verdes entre fincas y una franja de protección a lo largo del río Bermúdez.', 'Green areas between lots and a protected buffer along the Bermúdez River.'],
+  ['park', 'Estacionamientos', 'Parking', 'Áreas de estacionamiento y maniobra frente a la bodega existente.', 'Parking and maneuvering areas in front of the existing warehouse.'],
+  ['doc', 'Planos catastrados', 'Cadastral surveys', 'Cada finca filial cuenta con su plano catastrado inscrito ante el Registro Nacional.', 'Every lot has its own cadastral survey registered with the National Registry.'],
+];
+---
+<Base lang={lang} route="project" image="bodega-aerea-2"
+  title={t('El Proyecto | Cubo Park Condominio', 'The Project | Cubo Park Condominio')}
+  description={t('Condominio industrial de fincas filiales con calle interna, planta de tratamiento, laguna de retención y uso de suelo industrial en San Rafael de Alajuela.', 'Industrial condominium of titled lots with internal road, treatment plant, retention pond and industrial zoning in San Rafael, Alajuela.')}>
+  <Phero lang={lang} img="bodega-aerea-2" crumbs={[[t('El Proyecto', 'The Project')]]}
+    h1={t('Un condominio pensado <b>para la industria.</b>', 'A condominium built <b>for industry.</b>')}
+    lead={t('Fincas filiales independientes, áreas comunes construidas y uso de suelo industrial, en una de las zonas de mayor crecimiento logístico del Valle Central.', 'Independent titled lots, finished common areas and industrial zoning in one of the fastest-growing logistics areas of the Central Valley.')} />
+
+  <section class="sec light"><div class="wrap split2">
+    <div class="rv"><span class="eyebrow">{t('Concepto', 'Concept')}</span>
+      <h2 class="h-l" style="margin-top:22px" set:html={t('Su propia finca, <b>con servicios compartidos.</b>', 'Your own lot, <b>with shared services.</b>')} />
+      <div class="prose" style="margin-top:26px">
+        <p>{t('Cubo Park está constituido bajo el régimen de propiedad en condominio. Cada finca filial tiene plano catastrado y folio real propios, lo que permite comprar, financiar o vender cada unidad por separado.', 'Cubo Park is set up under Costa Rica’s condominium property regime. Each lot has its own cadastral survey and title, so every unit can be bought, financed or sold on its own.')}</p>
+        <p>{t('Las fincas están destinadas a uso industrial, bodegas, ofibodegas y oficinas. El condominio resuelve en común la calle de acceso, el tratamiento de aguas, la retención pluvial y las zonas verdes.', 'Lots are designated for industrial, warehouse, flex-space and office use. The condominium handles the access road, wastewater treatment, stormwater retention and green areas in common.')}</p>
+      </div></div>
+    <div class="frame rv"><Img name="bodega-calle" alt={t('Calle interna de Cubo Park', 'Cubo Park internal road')} sizes="(max-width:900px) 100vw, 50vw" /></div>
+  </div></section>
+
+  <section class="sec white"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">{t('Infraestructura', 'Infrastructure')}</span>
+      <h2 class="h-l" set:html={t('Lo que ya está <b>construido</b>', 'What is already <b>built</b>')} /></div>
+    <div class="specs">{specs.map(([i, he, hn, pe, pn]) => <div class="spec rv"><Icon name={i} /><h3>{t(he, hn)}</h3><p>{t(pe, pn)}</p></div>)}</div>
+  </div></section>
+
+  <section class="sec dark"><div class="wrap">
+    <div class="sec-head split"><div><span class="eyebrow">{t('Conjunto', 'Site plan')}</span>
+      <h2 class="h-l" style="margin-top:22px" set:html={t('Cinco fincas <b>disponibles</b>', 'Five lots <b>available</b>')} /></div>
+      <p class="lead">{t('Las fincas FFM-IB-1, 2 y 3 corresponden a otras unidades y áreas de paso del condominio.', 'Lots FFM-IB-1, 2 and 3 are other units and right-of-way areas within the condominium.')}</p></div>
+    <figure class="mp-fig" data-lb="conj" data-full="/img/masterplan-lotes.webp" data-cap={t('Master plan de Cubo Park', 'Cubo Park master plan')}>
+      <img src="/img/masterplan-lotes.webp" srcset="/img/masterplan-lotes-sm.webp 900w, /img/masterplan-lotes.webp 2000w" sizes="100vw" width="2000" height="920" alt={t('Master plan de Cubo Park con las fincas disponibles', 'Cubo Park master plan with available lots')} loading="lazy" decoding="async" />
+    </figure>
+    <div class="tbl-wrap tbl-dark"><table class="av">
+      <thead><tr><th>{t('Finca', 'Lot')}</th><th>{t('Tipo', 'Type')}</th><th class="r">{t('Terreno', 'Land')}</th><th class="r">{t('Construcción', 'Built')}</th><th>{t('Estado', 'Status')}</th></tr></thead>
+      <tbody>{Object.values(LOTS).map((v) => (
+        <tr><td class="id"><a href={href(`lot:${v.id}`, lang)}>{v.code}</a></td><td>{v.kind === 'warehouse' ? t('Bodega construida', 'Built warehouse') : t(v.name_es, v.name_en)}</td>
+          <td class="r">{v.kind === 'warehouse' ? m2(v.land!, 0) : m2(v.total!)}</td><td class="r">{v.kind === 'warehouse' ? m2(v.built!, 0) : '—'}</td><td>{t(v.status_es, v.status_en)}</td></tr>))}</tbody>
+    </table></div>
+    <div style="margin-top:40px"><a class="btn btn-red" href={href('availability', lang)}>{t('Ver precios y plano interactivo', 'See prices and interactive plan')} <Arrow /></a></div>
+  </div></section>
+</Base>
