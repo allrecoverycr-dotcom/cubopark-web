@@ -88,48 +88,20 @@
     });
   }
 
-  /* ---------- panorámica: arrastre, indicador y giroscopio ---------- */
+  /* ---------- panorámica: arrastre e indicador ---------- */
   d.querySelectorAll('.pano-wrap').forEach(function (wrap) {
-    var p = wrap.querySelector('.pano'), img = p.querySelector('img'), btn = wrap.querySelector('.pano-gyro');
-    var down = false, sx, sl, gyro = false, g0 = null, target = null, raf = 0;
+    var p = wrap.querySelector('.pano'), img = p.querySelector('img');
+    var down = false, sx, sl;
     function used() { wrap.classList.add('used'); }
     function center() { p.scrollLeft = (p.scrollWidth - p.clientWidth) / 2; }
     if (img && !img.complete) img.addEventListener('load', center); else center();
     p.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') return; down = true; sx = e.clientX; sl = p.scrollLeft; p.style.cursor = 'grabbing'; used(); });
     window.addEventListener('pointerup', function () { down = false; p.style.cursor = ''; });
     p.addEventListener('pointermove', function (e) { if (down) p.scrollLeft = sl - (e.clientX - sx); });
-    p.addEventListener('touchstart', function () { used(); if (gyro) stopGyro(); }, { passive: true });
+    p.addEventListener('touchstart', used, { passive: true });
+    p.addEventListener('scroll', function () { if (Math.abs(p.scrollLeft - (p.scrollWidth - p.clientWidth) / 2) > 20) used(); }, { passive: true });
     p.addEventListener('wheel', used, { passive: true });
 
-    /* giroscopio: solo en dispositivos táctiles con sensor de orientación */
-    var canGyro = 'DeviceOrientationEvent' in window && matchMedia('(hover: none)').matches;
-    if (!btn || !canGyro) return;
-    btn.hidden = false;
-    function label(on) { btn.classList.toggle('on', on); btn.setAttribute('aria-pressed', on); btn.querySelector('span').textContent = btn.getAttribute(on ? 'data-on' : 'data-off'); }
-    function angle(e) {
-      var o = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
-      if (o === 90) return e.beta; if (o === -90 || o === 270) return -e.beta;
-      return e.gamma;
-    }
-    function onOrient(e) {
-      var a = angle(e); if (a == null) return;
-      if (g0 === null) { g0 = a; target = p.scrollLeft; }
-      var max = p.scrollWidth - p.clientWidth;
-      var base = target === null ? max / 2 : target;
-      var x = base + (a - g0) * (max / 50);
-      p.dataset.goal = Math.max(0, Math.min(max, x));
-      if (!raf) raf = requestAnimationFrame(tick);
-    }
-    function tick() { raf = 0; var goal = +p.dataset.goal; p.scrollLeft += (goal - p.scrollLeft) * 0.2; if (gyro && Math.abs(goal - p.scrollLeft) > 0.5) raf = requestAnimationFrame(tick); }
-    function startGyro() { gyro = true; g0 = null; target = null; used(); label(true); window.addEventListener('deviceorientation', onOrient); }
-    function stopGyro() { gyro = false; label(false); window.removeEventListener('deviceorientation', onOrient); }
-    btn.addEventListener('click', function () {
-      if (gyro) { stopGyro(); return; }
-      var req = window.DeviceOrientationEvent && DeviceOrientationEvent.requestPermission;
-      if (typeof req === 'function') {
-        req.call(DeviceOrientationEvent).then(function (st) { if (st === 'granted') startGyro(); else btn.hidden = true; }).catch(function () { btn.hidden = true; });
-      } else startGyro();
-    });
   });
 
   /* ---------- master plan interactivo ---------- */

@@ -411,7 +411,7 @@ table.av{width:100%;border-collapse:collapse;min-width:880px;font-variant-numeri
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .crumbs span{opacity:.8}
 
-/* panorámica con indicador y giroscopio */
+/* panorámica con indicador */
 .pano-wrap{position:relative;background:var(--ink);overflow:hidden}
 .pano{overflow-x:auto;overflow-y:hidden;cursor:grab;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x;user-select:none;-webkit-user-select:none}
 .pano::-webkit-scrollbar{display:none}
@@ -424,7 +424,4 @@ table.av{width:100%;border-collapse:collapse;min-width:880px;font-variant-numeri
 .pano-hint-m{display:none}
 @media (hover:none){.pano-hint-d{display:none}.pano-hint-m{display:inline}}
 .pano-wrap.used .pano-hint{opacity:0}
-.pano-gyro{position:absolute;z-index:2;right:12px;bottom:12px;display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(22,22,22,.82);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase}
-.pano-gyro svg{width:18px;height:18px}
-.pano-gyro.on{background:var(--red);border-color:var(--red)}
 [hidden]{display:none!important}
