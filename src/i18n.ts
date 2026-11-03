@@ -36,3 +36,16 @@ export const useT = (lang: Lang) => (es: string, en: string) => (lang === 'es' ?
 export const money = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
 export const m2 = (n: number, d = 2) =>
   n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }) + ' m²';
+
+// Enlace al formulario con la propiedad y el tipo de solicitud ya seleccionados.
+//   interes: ib4 | bodega | bodega-alquiler | ib6 | ib7 | ib8 | todo | otro
+//   tipo:    info (solicitar información) | visita (solicitar visita) | alquiler (condiciones de alquiler)
+export type AskType = 'info' | 'visita' | 'alquiler';
+export const ask = (lang: Lang, interes?: string, tipo: AskType = 'info') => {
+  const q = new URLSearchParams();
+  if (interes) q.set('interes', interes);
+  q.set('tipo', tipo);
+  return href('contact', lang) + '?' + q.toString() + '#formulario';
+};
+// Valor del selector "Me interesa" para cada finca.
+export const interestOf = (id: string) => (id === 'ib5' ? 'bodega' : id);

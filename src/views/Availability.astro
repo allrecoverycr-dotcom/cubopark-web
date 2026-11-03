@@ -4,11 +4,11 @@ import Phero from '../components/Phero.astro';
 import Plan from '../components/Plan.astro';
 import LotCard from '../components/LotCard.astro';
 import Bundle from '../components/Bundle.astro';
-import { LOTS, LOT_IDS, ppm, houseValue } from '../data/lots';
-import { useT, href, money, m2, type Lang } from '../i18n';
+import { LOTS, ALL_IDS, ppm, houseValue, landValue } from '../data/lots';
+import { useT, href, ask, interestOf, money, m2, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
-const LB = [t('Finca', 'Lot'), t('Tipo', 'Type'), t('Área finca', 'Lot area'), t('Zona verde', 'Green zone'), t('Área total', 'Total area'), t('Precio', 'Price'), '$/m²', t('Modalidad', 'Terms'), ''];
+const LB = [t('Finca', 'Lot'), t('Tipo', 'Type'), t('Área total', 'Total area'), t('Zona verde A.C.L.R.', 'A.C.L.R. green zone'), t('Construcción', 'Building'), t('Modalidad', 'Terms'), t('Precio por m²', 'Price per m²'), t('Precio total', 'Total price'), ''];
 const w = LOTS.ib5;
 ---
 <Base lang={lang} route="availability" image="vista-lateral"
@@ -16,7 +16,7 @@ const w = LOTS.ib5;
   description={t('Master plan interactivo y precios en USD de los lotes industriales FFM-IB-4, 6, 7 y 8 y la bodega FFM-IB-5 de Cubo Park, San Rafael de Alajuela.', 'Interactive master plan and USD pricing for industrial lots FFM-IB-4, 6, 7 and 8 and warehouse FFM-IB-5 at Cubo Park, San Rafael, Alajuela.')}>
   <Phero lang={lang} img="vista-lateral" crumbs={[[t('Disponibilidad', 'Availability')]]}
     h1={t('Disponibilidad <b>y precios</b>', 'Availability <b>& pricing</b>')}
-    lead={t('Cuatro fincas filiales en venta y una bodega en venta o alquiler. Todos los precios en dólares estadounidenses.', 'Four lots for sale and one warehouse for sale or lease. All prices in US dollars.')} />
+    lead={t('Cinco fincas filiales disponibles: cuatro terrenos en venta, uno de ellos con casa, y una bodega en venta o alquiler. Todos los precios en dólares estadounidenses.', 'Five titled lots available: four plots for sale, one of them with a house, and a warehouse for sale or lease. All prices in US dollars.')} />
 
   <section class="sec dark" style="padding-top:clamp(50px,6vw,80px)"><div class="wrap"><Plan lang={lang} selected="ib6" /></div></section>
 
@@ -25,34 +25,44 @@ const w = LOTS.ib5;
       <h2 class="h-l" style="margin-top:22px" set:html={t('Todas las fincas, <b>lado a lado</b>', 'Every lot, <b>side by side</b>')} /></div>
       <div class="price-rules">
         <div><span class="k">{t("FFM-IB-6, 7 y 8", "FFM-IB-6, 7 & 8")}</span><span class="v">$250/m²</span><span class="d">{t('Lotes del fondo, detrás de la bodega. Sobre el área total, que incluye la zona verde A.C.L.R. de cada finca.', 'Rear lots behind the warehouse. On total area, including each lot’s A.C.L.R. green zone.')}</span></div>
-        <div><span class="k">FFM-IB-4</span><span class="v">$350/m² + {t('casa', 'house')}</span><span class="d">{t('Frente a calle principal. Terreno a $350/m² más el valor de la casa construida.', 'Fronting the main street. Land at $350/m² plus the value of the existing house.')}</span></div>
-        <div><span class="k">FFM-IB-5</span><span class="v">{t('Precio global', 'Package price')}</span><span class="d">{t('Bodega de 5,500 m² con su terreno, en venta o alquiler.', '5,500 m² warehouse with its land, for sale or lease.')}</span></div>
+        <div><span class="k">FFM-IB-4</span><span class="v">$350/m² + {t('casa', 'house')}</span><span class="d">{t(`Frente a calle principal. Terreno a $350/m² (${money(landValue(LOTS.ib4))}) más la casa existente (${money(houseValue(LOTS.ib4))}).`, `Fronting the main street. Land at $350/m² (${money(landValue(LOTS.ib4))}) plus the existing house (${money(houseValue(LOTS.ib4))}).`)}</span></div>
+        <div><span class="k">FFM-IB-5</span><span class="v">{t('Precio global', 'Package price')}</span><span class="d">{t('Bodega de 5,500 m² con su terreno, en venta. No se cotiza por m². Alquiler: $8/m² + IVA y mantenimiento de $1/m².', '5,500 m² warehouse with its land, for sale. Not priced per m². Lease: $8/m² + VAT plus $1/m² maintenance.')}</span></div>
       </div></div>
     <div class="filters" data-filter-group="#av-body">
-      <button class="f on" data-f="all">{t('Todas', 'All')}</button><button class="f" data-f="sale">{t('En venta', 'For sale')}</button><button class="f" data-f="rent">{t('En alquiler', 'For lease')}</button>
+      <button type="button" class="f on" data-f="all" aria-pressed="true">{t('Todas', 'All')}</button><button type="button" class="f" data-f="sale" aria-pressed="false">{t('En venta', 'For sale')}</button><button type="button" class="f" data-f="rent" aria-pressed="false">{t('En alquiler', 'For lease')}</button>
     </div>
     <div class="tbl-wrap"><table class="av">
-      <thead><tr><th>{t('Finca', 'Lot')}</th><th>{t('Tipo', 'Type')}</th><th class="r">{t('Área finca', 'Lot area')}</th><th class="r">{t('Zona verde', 'Green zone')}</th><th class="r">{t('Área total', 'Total area')}</th><th class="r">{t('Precio', 'Price')}</th><th class="r">$/m²</th><th>{t('Modalidad', 'Terms')}</th><th><span class="sr-only">{t('Ficha', 'Details')}</span></th></tr></thead>
+      <caption class="sr-only">{t('Comparativo de fincas disponibles en Cubo Park', 'Comparison of available lots at Cubo Park')}</caption>
+      <thead><tr>{LB.map((l, i) => <th scope="col" class={[2, 3, 4, 6, 7].includes(i) ? 'r' : undefined}>{l ? l : <span class="sr-only">{t('Acciones', 'Actions')}</span>}</th>)}</tr></thead>
       <tbody id="av-body">
         {['ib4', 'ib5', 'ib6', 'ib7', 'ib8'].map((k) => {
-          const v = LOTS[k];
-          return k === 'ib5' ? (
-            <tr data-cat="sale rent"><td data-l={LB[0]} class="id">{v.code}</td><td data-l={LB[1]}>{t('Bodega · 5,500 m² construidos', 'Warehouse · 5,500 m² built')}</td><td data-l={LB[2]} class="r">{m2(w.land!)}</td><td data-l={LB[3]} class="r">—</td><td data-l={LB[4]} class="r">{m2(w.land!)}</td>
-              <td data-l={LB[5]} class="r pr">{money(v.price)}<br /><span class="muted" style="font-size:.8rem;font-weight:400">{t('o $8/m² + IVA', 'or $8/m² + VAT')}</span></td><td data-l={LB[6]} class="r">—</td>
-              <td data-l={LB[7]}><span class="badge both">{t('Venta / Alquiler', 'Sale / Lease')}</span></td><td data-l={LB[8]}><a class="link-arrow" href={href('lot:ib5', lang)}>{t('Ficha', 'Details')}</a></td></tr>
-          ) : (
-            <tr data-cat="sale"><td data-l={LB[0]} class="id">{v.code}</td><td data-l={LB[1]}>{t(v.name_es, v.name_en)}</td><td data-l={LB[2]} class="r">{m2(v.lot!)}</td><td data-l={LB[3]} class="r">{v.green ? m2(v.green) : '—'}</td><td data-l={LB[4]} class="r">{m2(v.total!)}</td>
-              <td data-l={LB[5]} class="r pr">{money(v.price)}{v.kind === 'house' && <><br /><span class="muted" style="font-size:.8rem;font-weight:400">{t('Terreno + casa', 'Land + house')}</span></>}</td><td data-l={LB[6]} class="r">{money(ppm(v))}{v.kind === 'house' && <><br /><span class="muted" style="font-size:.8rem">+ {t('casa', 'house')} {money(houseValue(v))}</span></>}</td><td data-l={LB[7]}><span class="badge">{t('Venta', 'Sale')}</span></td><td data-l={LB[8]}><a class="link-arrow" href={href(`lot:${k}`, lang)}>{t('Ficha', 'Details')}</a></td></tr>
-          );
+          const v = LOTS[k]; const url = href(`lot:${k}`, lang);
+          const acts = <td data-l class="ac"><a class="link-arrow" href={url}>{t('Ficha', 'Details')}</a><a class="link-arrow" href={ask(lang, interestOf(k), 'info')}>{t('Consultar', 'Enquire')}</a></td>;
+          if (k === 'ib5') return (
+            <tr data-cat="sale rent"><th scope="row" class="id" data-l={LB[0]}>{v.code}</th><td data-l={LB[1]}>{t('Bodega industrial', 'Industrial warehouse')}</td>
+              <td data-l={LB[2]} class="r">{m2(w.land!)}<small>{t('terreno', 'land')}</small></td><td data-l={LB[3]} class="r">—</td><td data-l={LB[4]} class="r">{m2(w.built!, 0)}</td>
+              <td data-l={LB[5]}>{t('Venta o alquiler', 'Sale or lease')}</td><td data-l={LB[6]} class="r">{t('Precio global', 'Package price')}</td>
+              <td data-l={LB[7]} class="r pr">{money(v.price)}<small>{t('Alquiler $8/m² + IVA · mant. $1/m²', 'Lease $8/m² + VAT · maint. $1/m²')}</small></td>{acts}</tr>);
+          if (v.kind === 'house') return (
+            <tr data-cat="sale"><th scope="row" class="id" data-l={LB[0]}>{v.code}</th><td data-l={LB[1]}>{t('Terreno y casa existente', 'Land with existing house')}</td>
+              <td data-l={LB[2]} class="r">{m2(v.total!)}<small>{t('terreno', 'land')}</small></td><td data-l={LB[3]} class="r">—</td><td data-l={LB[4]} class="r">{t('Casa existente', 'Existing house')}</td>
+              <td data-l={LB[5]}>{t('Venta', 'Sale')}</td><td data-l={LB[6]} class="r">{money(ppm(v))}<small>{t('terreno', 'land')}</small></td>
+              <td data-l={LB[7]} class="r pr">{money(v.price)}<small>{t('Terreno', 'Land')} {money(landValue(v))} + {t('casa', 'house')} {money(houseValue(v))}</small></td>{acts}</tr>);
+          return (
+            <tr data-cat="sale"><th scope="row" class="id" data-l={LB[0]}>{v.code}</th><td data-l={LB[1]}>{t('Lote industrial', 'Industrial lot')}</td>
+              <td data-l={LB[2]} class="r">{m2(v.total!)}<small>{t('útil', 'usable')} {m2(v.lot!)}</small></td><td data-l={LB[3]} class="r">{m2(v.green!)}</td><td data-l={LB[4]} class="r">—</td>
+              <td data-l={LB[5]}>{t('Venta', 'Sale')}</td><td data-l={LB[6]} class="r">{money(ppm(v))}<small>{t('área total', 'total area')}</small></td>
+              <td data-l={LB[7]} class="r pr">{money(v.price)}</td>{acts}</tr>);
         })}
       </tbody>
     </table></div>
     <div class="cta-strip"><span class="t" set:html={t('¿Le interesa <b>todo el proyecto</b>? Vea el precio total y la sumatoria de m².', 'Interested in <b>the entire project</b>? See the total price and combined area.')} />
       <a class="btn btn-red" href={'#' + t('proyecto-completo', 'entire-project')}>{t('Comprar todo el proyecto', 'Buy the entire project')}</a></div>
-    <p class="muted" style="font-size:.82rem;margin-top:18px">{t('Áreas según planos catastrados y cuadros de áreas del anteproyecto. Precios en USD, sujetos a cambio sin previo aviso.', 'Areas per cadastral surveys and the preliminary project area tables. Prices in USD, subject to change without notice.')}</p>
+    <p class="muted" style="font-size:.82rem;margin-top:18px">{t('Áreas según planos catastrados y cuadros de áreas del condominio. El área útil indicada no equivale al área edificable. Precios en USD, redondeados al dólar, sujetos a cambio sin previo aviso.', 'Areas per the cadastral surveys and the condominium area tables. Usable area is not the same as buildable area. Prices in USD, rounded to the dollar, subject to change without notice.')}</p>
   </div></section>
 
   <Bundle lang={lang} />
 
-  <section class="sec white"><div class="wrap"><div class="cards">{LOT_IDS.map((id) => <LotCard id={id} lang={lang} />)}</div></div></section>
+  <section class="sec white"><div class="wrap"><div class="sec-head"><span class="eyebrow">{t('Propiedades', 'Properties')}</span><h2 class="h-m">{t('Fichas de cada finca', 'Details for each lot')}</h2></div>
+    <div class="cards home">{ALL_IDS.map((id, i) => <LotCard id={id} lang={lang} wide={i < 2} />)}</div></div></section>
 </Base>

@@ -15,7 +15,7 @@ const cats: [string, string, string][] = [['all', 'Todas', 'All'], ['aerea', 'A�
     h1={t('Galería <b>del proyecto</b>', 'Project <b>gallery</b>')}
     lead={t('Fotografía aérea, interiores de la bodega y los lotes disponibles.', 'Aerial photography, warehouse interiors and the available lots.')} />
   <section class="sec light"><div class="wrap">
-    <div class="filters" data-filter-group="#gal">{cats.map(([c, es, en]) => <button class={c === 'all' ? 'f on' : 'f'} data-f={c}>{t(es, en)}</button>)}</div>
+    <div class="filters" data-filter-group="#gal">{cats.map(([c, es, en]) => <button type="button" class={c === 'all' ? 'f on' : 'f'} data-f={c} aria-pressed={c === 'all' ? 'true' : 'false'}>{t(es, en)}</button>)}</div>
     <div class="masonry" id="gal">
       {GAL.map(([n, c, es, en]) => <figure data-cat={c} data-lb="gal" data-full={`/img/${n}.webp`} data-cap={t(es, en)}><Img name={n} alt={t(es, en)} sizes="(max-width:700px) 100vw, 33vw" /><figcaption>{t(es, en)}</figcaption></figure>)}
     </div>

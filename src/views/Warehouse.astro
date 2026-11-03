@@ -6,12 +6,14 @@ import Arrow from '../components/Arrow.astro';
 import Phero from '../components/Phero.astro';
 import { LOTS, WAREHOUSE, CAP } from '../data/lots';
 import { SITE } from '../data/site';
-import { useT, href, money, type Lang } from '../i18n';
+import { useT, href, ask, money, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
 const w = LOTS.ib5;
 const gal = ['nave-panoramica', 'nave-mezzanine', 'nave-oficinas', 'oficina-vidrio', 'pasarela', 'oficina-amplia', 'recepcion', 'escalera', 'nave-amplia'];
-const contact = href('contact', lang) + '?interes=bodega';
+const contact = ask(lang, 'bodega', 'info');
+const visit = ask(lang, 'bodega', 'visita');
+const lease = ask(lang, 'bodega-alquiler', 'alquiler');
 const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: 'Bodega industrial FFM-IB-5 · Cubo Park', price: w.price, priceCurrency: 'USD', url: SITE.domain + href('warehouse', lang),
   itemOffered: { '@type': 'Place', name: 'FFM-IB-5', address: { '@type': 'PostalAddress', addressLocality: 'San Rafael', addressRegion: 'Alajuela', addressCountry: 'CR' } } };
 ---
@@ -56,8 +58,6 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: 'Bodega i
           <li><Icon name="light" />{t('Lucernarios e iluminación industrial', 'Skylights and industrial lighting')}</li>
           <li><Icon name="fire" />{t('Red y gabinetes contra incendio', 'Fire main and hose cabinets')}</li>
           <li><Icon name="park" />{t('Estacionamientos frontales', 'Front parking')}</li>
-          <li><Icon name="truck" />{t('Altura libre:', 'Clear height:')} <span class="ph">{t('por confirmar', 'TBC')}</span></li>
-          <li><Icon name="light" />{t('Capacidad eléctrica:', 'Power capacity:')} <span class="ph">{t('por confirmar', 'TBC')}</span></li>
         </ul></div>
       <div class="block"><h2>{t('Galería', 'Gallery')}</h2>
         <div class="mini-gal">{gal.map((n, i) => <div class={i === 0 ? 'big' : undefined} data-lb="bodega" data-full={`/img/${n}.webp`} data-cap={t(CAP[n][0], CAP[n][1])}><Img name={n} alt={t(CAP[n][0], CAP[n][1])} sizes="33vw" /></div>)}</div></div>
@@ -69,7 +69,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: 'Bodega i
     <aside class="pricebox">
       <div class="tabs" data-tabs><button class="on" data-t="rent">{t('Alquiler', 'Lease')}</button><button data-t="sale">{t('Venta', 'Sale')}</button></div>
       <div data-pane="rent">
-        <div class="k">{t('Total mensual estimado', 'Estimated monthly total')}</div>
+        <div class="k">{t('Total mensual de referencia', 'Monthly total (reference)')}</div>
         <div class="v num" style="margin-top:10px">{money(WAREHOUSE.total)}</div>
         <div class="breakdown" style="margin-top:22px">
           <div><span>{t('Renta · 5,500 m² × $8', 'Rent · 5,500 m² × $8')}</span><span>{money(WAREHOUSE.rent)}</span></div>
@@ -84,8 +84,10 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: 'Bodega i
         <div class="sub" style="margin-top:12px">{t('Precio global que incluye el terreno de 4,230.89 m² y la bodega de 5,500 m² construidos. En USD.', 'Package price including the 4,230.89 m² of land and the 5,500 m² built warehouse. In USD.')}</div>
       </div>
       <hr />
-      <a class="btn btn-red" href={contact}>{t('Solicitar información', 'Request information')} <Arrow /></a>
-      <a class="btn btn-ghost" href={contact}>{t('Agendar visita', 'Book a tour')}</a>
+      <a class="btn btn-red" data-pane="rent" href={lease}>{t('Consultar condiciones de alquiler', 'Ask about lease terms')} <Arrow /></a>
+      <a class="btn btn-red" data-pane="sale" hidden href={contact}>{t('Solicitar información de compra', 'Request purchase details')} <Arrow /></a>
+      <a class="btn btn-ghost" href={visit}>{t('Solicitar visita', 'Request a visit')}</a>
+      <a class="link-arrow on-d" href="/docs/plano-catastrado-ffm-ib-5.pdf" target="_blank" rel="noopener">{t('Plano catastrado (PDF)', 'Cadastral survey (PDF)')} <Arrow /></a>
     </aside>
   </div></section>
 </Base>

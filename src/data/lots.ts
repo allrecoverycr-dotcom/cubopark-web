@@ -71,6 +71,7 @@ export const TAGS: Record<string, number[]> = {
   ib4: [3293, 890 - OY, 3286, 912 - OY, 1112 - OY],
 };
 
+// Orden: vistas aéreas · identificación · accesos · bodega · oficinas y mezzanines · terrenos · infraestructura y entorno
 export const GAL: [string, string, string, string][] = [
   ['aerial-panorama', 'aerea', 'Vista aérea del condominio y su entorno', 'Aerial view of the condominium and surroundings'],
   ['bodega-aerea', 'aerea exterior', 'Bodega FFM-IB-5, vista aérea', 'Warehouse FFM-IB-5, aerial view'],
@@ -81,10 +82,10 @@ export const GAL: [string, string, string, string][] = [
   ['bodega-acceso', 'exterior', 'Acceso y estacionamientos', 'Entrance and parking'],
   ['bodega-calle', 'exterior', 'Calle interna frente a la bodega', 'Internal road by the warehouse'],
   ['nave-panoramica', 'interior', 'Nave principal', 'Main hall'],
-  ['nave-mezzanine', 'interior', 'Mezzanine y oficinas de segundo nivel', 'Mezzanine and second-floor offices'],
-  ['nave-oficinas', 'interior oficinas', 'Cortina de acceso y oficinas en dos niveles', 'Roll-up door and two-level offices'],
   ['nave-amplia', 'interior', 'Espacio libre de producción', 'Open production floor'],
+  ['nave-oficinas', 'interior oficinas', 'Cortina de acceso y oficinas en dos niveles', 'Roll-up door and two-level offices'],
   ['nave-escaleras', 'interior', 'Escaleras metálicas a mezzanine', 'Steel stairs to mezzanine'],
+  ['nave-mezzanine', 'interior', 'Mezzanine y oficinas de segundo nivel', 'Mezzanine and second-floor offices'],
   ['pasarela', 'interior', 'Pasarelas en mezzanine', 'Mezzanine walkways'],
   ['oficina-vidrio', 'oficinas', 'Oficinas con cerramiento de vidrio', 'Glass-enclosed offices'],
   ['oficina-amplia', 'oficinas', 'Oficina de planta abierta', 'Open-plan office'],
@@ -92,10 +93,10 @@ export const GAL: [string, string, string, string][] = [
   ['escalera', 'oficinas', 'Escalera interna', 'Internal staircase'],
   ['recepcion', 'oficinas', 'Recepción', 'Reception'],
   ['area-servicio', 'oficinas', 'Área de servicio', 'Service area'],
-  ['bodega-jardin', 'exterior terreno', 'Zonas verdes del condominio', 'Condominium green areas'],
-  ['calle-interna', 'terreno', 'Calle interna asfaltada', 'Paved internal road'],
-  ['calle-interna-3', 'terreno', 'Frente de los lotes', 'Lot frontage'],
   ['casa-ib4', 'aerea terreno', 'Finca FFM-IB-4, terreno y casa', 'Lot FFM-IB-4, land and house'],
+  ['calle-interna-3', 'terreno', 'Frente de los lotes', 'Lot frontage'],
+  ['calle-interna', 'terreno', 'Calle interna asfaltada', 'Paved internal road'],
+  ['bodega-jardin', 'exterior terreno', 'Zonas verdes del condominio', 'Condominium green areas'],
 ];
 export const CAP: Record<string, [string, string]> = Object.fromEntries(GAL.map((g) => [g[0], [g[2], g[3]]]));
 

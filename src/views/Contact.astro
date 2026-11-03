@@ -2,46 +2,64 @@
 import Base from '../layouts/Base.astro';
 import Arrow from '../components/Arrow.astro';
 import Phero from '../components/Phero.astro';
-import Ph from '../components/Ph.astro';
-import { SITE } from '../data/site';
-import { useT, type Lang } from '../i18n';
+import { SITE, waLink } from '../data/site';
+import { useT, href, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
-const opts: [string, string, string][] = [['todo', 'Todo el proyecto (5 fincas)', 'Entire project (5 lots)'], ['bodega-alquiler', 'Bodega FFM-IB-5 · Alquiler', 'Warehouse FFM-IB-5 · Lease'], ['bodega', 'Bodega FFM-IB-5 · Compra', 'Warehouse FFM-IB-5 · Purchase'],
-  ['ib4', 'FFM-IB-4 · Terreno y casa', 'FFM-IB-4 · Land & house'], ['ib6', 'FFM-IB-6 · Lote industrial', 'FFM-IB-6 · Industrial lot'],
-  ['ib7', 'FFM-IB-7 · Lote industrial', 'FFM-IB-7 · Industrial lot'], ['ib8', 'FFM-IB-8 · Lote industrial', 'FFM-IB-8 · Industrial lot'], ['otro', 'Otro', 'Other']];
+const C = SITE.contact;
+const hours = lang === 'es' ? C.hours_es : C.hours_en;
+const wa = waLink(t('Hola, me interesa Cubo Park.', 'Hello, I am interested in Cubo Park.'));
+const opts: [string, string, string][] = [
+  ['ib4', 'FFM-IB-4 · Terreno y casa existente', 'FFM-IB-4 · Land with existing house'],
+  ['bodega', 'FFM-IB-5 · Bodega, compra', 'FFM-IB-5 · Warehouse, purchase'],
+  ['bodega-alquiler', 'FFM-IB-5 · Bodega, alquiler', 'FFM-IB-5 · Warehouse, lease'],
+  ['ib6', 'FFM-IB-6 · Lote industrial', 'FFM-IB-6 · Industrial lot'],
+  ['ib7', 'FFM-IB-7 · Lote industrial', 'FFM-IB-7 · Industrial lot'],
+  ['ib8', 'FFM-IB-8 · Lote industrial', 'FFM-IB-8 · Industrial lot'],
+  ['todo', 'Todo el proyecto (5 fincas)', 'Entire project (5 lots)'],
+  ['otro', 'Otra consulta', 'Other enquiry']];
+const kinds: [string, string, string][] = [['info', 'Solicitar información', 'Request information'], ['visita', 'Solicitar visita', 'Request a visit'], ['alquiler', 'Condiciones de alquiler', 'Lease terms']];
 ---
 <Base lang={lang} route="contact" image="bodega-fachada"
   title={t('Contacto | Cubo Park Condominio', 'Contact | Cubo Park Condominio')}
-  description={t('Solicite información o agende una visita a los lotes industriales y la bodega de Cubo Park en San Rafael de Alajuela.', 'Request information or book a tour of the industrial lots and warehouse at Cubo Park in San Rafael, Alajuela.')}>
+  description={t('Solicite información, una visita o las condiciones de alquiler de los lotes industriales y la bodega de Cubo Park en San Rafael de Alajuela.', 'Request information, a site visit or lease terms for the industrial lots and warehouse at Cubo Park in San Rafael, Alajuela.')}>
   <Phero lang={lang} img="bodega-fachada" crumbs={[[t('Contacto', 'Contact')]]}
     h1={t('Hablemos de <b>su próximo espacio</b>', 'Let’s talk about <b>your next space</b>')}
-    lead={t('Déjenos sus datos y le enviamos información detallada o coordinamos una visita al condominio.', 'Leave your details and we’ll send full information or set up a tour of the condominium.')} />
-  <section class="sec light"><div class="wrap ficha">
+    lead={t('Indíquenos la propiedad y el tipo de consulta. Le respondemos con la información detallada o coordinamos con usted la fecha de la visita.', 'Tell us the property and the type of enquiry. We will reply with full details or arrange a visit date with you.')} />
+  <section class="sec light" id="formulario"><div class="wrap ficha">
     <div>
       <form id="lead" class="form" action="/contacto.php" method="post" novalidate>
-        <input type="hidden" name="idioma" value={lang} />
+        <input type="hidden" name="idioma" value={lang} /><input type="hidden" name="ts" value="" />
         <div class="hp" aria-hidden="true"><label for="f-web">Web</label><input id="f-web" name="web" tabindex="-1" autocomplete="off" /></div>
-        <div class="field full"><label for="f-int">{t('Me interesa', 'I’m interested in')}</label>
+        <fieldset class="field full seg-f">
+          <legend>{t('Tipo de solicitud', 'Type of enquiry')}</legend>
+          <div class="seg">{kinds.map(([v, es, en], i) => <label><input type="radio" name="tipo" value={v} checked={i === 0} /><span>{t(es, en)}</span></label>)}</div>
+        </fieldset>
+        <div class="field full"><label for="f-int">{t('Propiedad de interés', 'Property of interest')}</label>
           <select id="f-int" name="interes">{opts.map(([v, es, en]) => <option value={v}>{t(es, en)}</option>)}</select></div>
-        <div class="field"><label for="f-name">{t('Nombre completo', 'Full name')} *</label><input id="f-name" name="nombre" required autocomplete="name" /></div>
+        <div class="field"><label for="f-name">{t('Nombre completo', 'Full name')} <span aria-hidden="true">*</span></label><input id="f-name" name="nombre" required autocomplete="name" /></div>
         <div class="field"><label for="f-co">{t('Empresa', 'Company')}</label><input id="f-co" name="empresa" autocomplete="organization" /></div>
-        <div class="field"><label for="f-mail">{t('Correo electrónico', 'Email')} *</label><input id="f-mail" name="correo" type="email" required autocomplete="email" /></div>
-        <div class="field"><label for="f-tel">{t('Teléfono / WhatsApp', 'Phone / WhatsApp')} *</label><input id="f-tel" name="telefono" type="tel" required autocomplete="tel" /></div>
-        <div class="field full"><label for="f-msg">{t('Mensaje', 'Message')}</label><textarea id="f-msg" name="mensaje" placeholder={t('Cuéntenos qué tipo de operación tiene y qué área necesita.', 'Tell us about your operation and the space you need.')}></textarea></div>
-        <p class="err full" hidden>{t('Complete su nombre, un correo válido y un teléfono.', 'Please enter your name, a valid email and a phone number.')}</p>
-        <p class="err full send-err" hidden>{t('No pudimos enviar su solicitud. Escríbanos por WhatsApp o intente de nuevo.', 'We couldn’t send your request. Message us on WhatsApp or try again.')}</p>
-        <div class="full"><button class="btn btn-red" type="submit">{t('Enviar solicitud', 'Send request')} <Arrow /></button></div>
+        <div class="field"><label for="f-mail">{t('Correo electrónico', 'Email')} <span aria-hidden="true">*</span></label><input id="f-mail" name="correo" type="email" required autocomplete="email" /></div>
+        <div class="field"><label for="f-tel">{t('Teléfono o WhatsApp', 'Phone or WhatsApp')} <span aria-hidden="true">*</span></label><input id="f-tel" name="telefono" type="tel" required autocomplete="tel" /></div>
+        <div class="field full"><label for="f-msg">{t('Mensaje', 'Message')}</label><textarea id="f-msg" name="mensaje" placeholder={t('Tipo de operación, área que necesita o fecha preferida para la visita.', 'Type of operation, space required or preferred visit date.')}></textarea></div>
+        <p class="note full">{t('* Campos obligatorios. Usamos sus datos únicamente para responder a esta solicitud.', '* Required fields. We use your details only to reply to this enquiry.')}</p>
+        <p class="err full" role="alert" hidden>{t('Complete su nombre, un correo válido y un teléfono.', 'Please enter your name, a valid email and a phone number.')}</p>
+        <p class="err full send-err" role="alert" hidden>{t('No pudimos enviar su solicitud. Sus datos siguen en el formulario: intente de nuevo en unos minutos.', 'We couldn’t send your request. Your details are still in the form: please try again in a few minutes.')}</p>
+        <div class="full"><button class="btn btn-red" type="submit"><span class="lbl">{t('Enviar solicitud', 'Send request')}</span> <Arrow /></button></div>
       </form>
-      <div id="lead-ok" class="ok" hidden><span class="eyebrow">{t('Solicitud recibida', 'Request received')}</span>
-        <h2 class="h-m">{t('Gracias. Le contactaremos pronto.', 'Thank you. We’ll be in touch soon.')}</h2></div>
+      <div id="lead-ok" class="ok" tabindex="-1" hidden><span class="eyebrow">{t('Solicitud recibida', 'Request received')}</span>
+        <h2 class="h-m">{t('Gracias. Le contactaremos pronto.', 'Thank you. We’ll be in touch soon.')}</h2>
+        <p class="muted">{t('Recibimos sus datos y la propiedad de su interés.', 'We have received your details and the property you are interested in.')}</p></div>
     </div>
     <aside class="pricebox contact-side">
-      <div class="it"><span class="k">WhatsApp</span><span class="v"><Ph>{SITE.contact.phone}</Ph></span></div>
-      <div class="it"><span class="k">{t('Correo', 'Email')}</span><span class="v"><Ph>{SITE.contact.email}</Ph></span></div>
-      <div class="it"><span class="k">{t('Horario de visitas', 'Tour hours')}</span><span class="v"><Ph>{t(SITE.contact.hours_es, SITE.contact.hours_en)}</Ph></span></div>
-      <div class="it" style="border:0;padding:0"><span class="k">{t('Dirección', 'Address')}</span><span class="v">Calle Potrerillos, San Rafael, Alajuela</span></div>
-      <a class="btn btn-red" href={`https://wa.me/${SITE.contact.whatsapp}`} target="_blank" rel="noopener">{t('Escribir por WhatsApp', 'Message on WhatsApp')}</a>
+      {C.phone && <div class="it"><span class="k">{t('Teléfono', 'Phone')}</span><a class="v" href={'tel:' + C.phone.replace(/[^+\d]/g, '')}>{C.phone}</a></div>}
+      {C.email && <div class="it"><span class="k">{t('Correo', 'Email')}</span><a class="v" href={'mailto:' + C.email}>{C.email}</a></div>}
+      {hours && <div class="it"><span class="k">{t('Horario de atención', 'Office hours')}</span><span class="v">{hours}</span></div>}
+      <div class="it"><span class="k">{t('Dirección', 'Address')}</span><span class="v">Calle Potrerillos, San Rafael, Alajuela, Costa Rica</span></div>
+      <div class="it" style="border:0;padding:0"><span class="k">{t('Visitas', 'Visits')}</span><span class="v sm">{t('Las visitas se coordinan previamente. Envíe su solicitud y le proponemos fecha y hora.', 'Visits are arranged in advance. Send your request and we will propose a date and time.')}</span></div>
+      {wa && <a class="btn btn-red" href={wa} target="_blank" rel="noopener">{t('Escribir por WhatsApp', 'Message on WhatsApp')}</a>}
+      <a class="btn btn-ghost" href={SITE.maps} target="_blank" rel="noopener">{t('Ver en Google Maps', 'View on Google Maps')}</a>
+      <a class="link-arrow on-d" href={href('availability', lang)}>{t('Ver precios y disponibilidad', 'See prices and availability')} <Arrow /></a>
     </aside>
   </div></section>
 </Base>

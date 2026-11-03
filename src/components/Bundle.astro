@@ -2,10 +2,11 @@
 // Bloque "Comprar todo el proyecto": precio total y sumatoria de m².
 import Arrow from './Arrow.astro';
 import { LOTS, ALL_IDS, BUNDLE, SUM_PRICE } from '../data/lots';
-import { useT, href, money, m2, type Lang } from '../i18n';
+import { useT, href, ask, money, m2, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
-const contact = href('contact', lang) + '?interes=todo';
+const contact = ask(lang, 'todo', 'info');
+const visit = ask(lang, 'todo', 'visita');
 ---
 <section class="sec bundle" id={t('proyecto-completo', 'entire-project')}>
   <div class="wrap">
@@ -26,7 +27,7 @@ const contact = href('contact', lang) + '?interes=todo';
         </div>
         <div class="hero-ctas" style="margin-top:34px">
           <a class="btn btn-red" href={contact}>{t('Solicitar información', 'Request information')} <Arrow /></a>
-          <a class="btn btn-ghost" href={contact}>{t('Agendar visita', 'Book a tour')}</a>
+          <a class="btn btn-ghost" href={visit}>{t('Solicitar visita', 'Request a visit')}</a>
         </div>
       </div>
       <div class="bundle-r">
@@ -35,7 +36,7 @@ const contact = href('contact', lang) + '?interes=todo';
           <thead><tr><th>{t('Finca', 'Lot')}</th><th class="r">{t('Terreno', 'Land')}</th><th class="r">{t('Precio', 'Price')}</th></tr></thead>
           <tbody>
             {ALL_IDS.map((k) => { const v = LOTS[k]; return (
-              <tr><td><a href={href(`lot:${k}`, lang)}>{v.code}</a><span>{v.kind === 'warehouse' ? t('Bodega · 5,500 m² constr.', 'Warehouse · 5,500 m² built') : t(v.name_es, v.name_en)}</span></td>
+              <tr><td><a href={href(`lot:${k}`, lang)}>{v.code}</a><span>{v.kind === 'warehouse' ? t('Bodega · 5,500 m² constr.', 'Warehouse · 5,500 m² built') : v.kind === 'house' ? t('Terreno y casa existente', 'Land with existing house') : t('Lote industrial', 'Industrial lot')}</span></td>
                 <td class="r">{m2(v.kind === 'warehouse' ? v.land! : v.total!)}</td><td class="r">{money(v.price)}</td></tr>); })}
           </tbody>
           <tfoot><tr><td>{t('Total', 'Total')}</td><td class="r">{m2(BUNDLE.land)}</td><td class="r">{money(SUM_PRICE)}</td></tr></tfoot>

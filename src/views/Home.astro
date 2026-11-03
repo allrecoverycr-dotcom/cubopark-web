@@ -6,8 +6,8 @@ import Arrow from '../components/Arrow.astro';
 import Plan from '../components/Plan.astro';
 import LotCard from '../components/LotCard.astro';
 import Bundle from '../components/Bundle.astro';
-import { GAL, LAND_TOTAL } from '../data/lots';
-import { useT, href, money, type Lang } from '../i18n';
+import { GAL, BUNDLE, LOTS } from '../data/lots';
+import { useT, href, ask, money, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
 const strip = GAL.filter((g) => ['bodega-aerea', 'nave-mezzanine', 'oficina-vidrio', 'bodega-calle', 'nave-oficinas', 'calle-interna', 'escalera', 'bodega-fachada'].includes(g[0]));
@@ -17,26 +17,27 @@ const strip = GAL.filter((g) => ['bodega-aerea', 'nave-mezzanine', 'oficina-vidr
   description={t('Lotes industriales con título propio y bodega de 5,500 m² en venta o alquiler en San Rafael de Alajuela, cerca de Lindora y Ruta 27. Precios en USD.', 'Independently titled industrial lots and a 5,500 m² warehouse for sale or lease in San Rafael, Alajuela, near Lindora and Route 27. Prices in USD.')}>
 
   <section class="hero">
-    <div class="hero-bg"><Img name="aerial-panorama" alt={t('Vista aérea de Cubo Park en San Rafael de Alajuela', 'Aerial view of Cubo Park in San Rafael, Alajuela')} eager /></div>
+    <div class="hero-bg"><Img name="aerial-panorama" alt={t('Vista aérea de Cubo Park en San Rafael de Alajuela', 'Aerial view of Cubo Park in San Rafael, Alajuela')} eager sizes="100vw" /></div>
     <div class="wrap">
-      <span class="eyebrow" style="color:var(--sand)">{t('Condominio industrial · San Rafael, Alajuela', 'Industrial condominium · San Rafael, Alajuela')}</span>
-      <h1 class="h-xl" set:html={t('Espacio para que su operación <b>crezca.</b>', 'Room for your operation <b>to grow.</b>')} />
-      <p class="lead">{t('Lotes industriales con título propio y una bodega de 5,500 m² lista para operar, dentro de un condominio con calle interna, planta de tratamiento y zonas verdes. A minutos de Lindora y la Ruta 27.', 'Independently titled industrial lots and a 5,500 m² warehouse ready to operate, inside a condominium with its own internal road, treatment plant and green areas. Minutes from Lindora and Route 27.')}</p>
-      <div class="hero-ctas">
-        <a class="btn btn-red" href={href('availability', lang)}>{t('Ver disponibilidad', 'View availability')} <Arrow /></a>
-        <a class="btn btn-ghost" href={href('contact', lang)}>{t('Agendar visita', 'Book a tour')}</a>
+      <span class="eyebrow hero-in" style="color:var(--sand)">{t('Condominio industrial · San Rafael de Alajuela', 'Industrial condominium · San Rafael, Alajuela')}</span>
+      <h1 class="h-xl hero-in" style="--d:1" set:html={t('Lotes industriales y bodega lista para operar <b>en una ubicación estratégica.</b>', 'Industrial lots and a ready-to-operate warehouse <b>in a strategic location.</b>')} />
+      <p class="lead hero-in" style="--d:2">{t('Terrenos con título independiente, infraestructura de condominio y una bodega industrial de 5,500 m² disponible para venta o alquiler en San Rafael de Alajuela.', 'Independently titled land, shared condominium infrastructure and a 5,500 m² industrial warehouse available for sale or lease in San Rafael, Alajuela.')}</p>
+      <div class="hero-ctas hero-in" style="--d:3">
+        <a class="btn btn-red" href={'#' + t('propiedades', 'properties')}>{t('Explorar propiedades', 'Explore properties')} <Arrow /></a>
+        <a class="btn btn-ghost" href={ask(lang, undefined, 'visita')}>{t('Solicitar visita', 'Request a visit')}</a>
       </div>
-      <div class="stats num">
-        <div class="stat"><div class="v">5,500<small>m²</small></div><div class="k">{t('Bodega construida', 'Built warehouse')}</div></div>
-        <div class="stat"><div class="v">4</div><div class="k">{t('Fincas filiales en venta', 'Lots for sale')}</div></div>
-        <div class="stat"><div class="v">{Math.round(LAND_TOTAL).toLocaleString('en-US')}<small>m²</small></div><div class="k">{t('De terreno en 4 lotes', 'Of land across 4 lots')}</div></div>
+      <div class="stats num hero-in" style="--d:4">
+        <div class="stat"><div class="v"><span data-count="5">5</span></div><div class="k">{t('Fincas filiales disponibles', 'Titled lots available')}</div></div>
+        <div class="stat"><div class="v"><span data-count="5500">5,500</span><small>m²</small></div><div class="k">{t('Bodega construida', 'Built warehouse')}</div></div>
+        <div class="stat"><div class="v"><span data-count={BUNDLE.land.toFixed(2)} data-dec="2">{BUNDLE.land.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span><small>m²</small></div><div class="k">{t('De terreno en las 5 fincas', 'Of land across the 5 lots')}</div></div>
         <div class="stat"><div class="v">$250<small>/m²</small></div><div class="k">{t('Lotes del fondo · 6, 7 y 8', 'Rear lots · 6, 7 & 8')}</div></div>
       </div>
     </div>
+    <a class="scroll-cue" href={'#' + t('el-condominio', 'the-condominium')} aria-label={t('Bajar a la siguiente sección', 'Scroll to the next section')}><span></span></a>
   </section>
 
-  <section class="sec light"><div class="wrap split2">
-    <div class="frame rv"><Img name="bodega-acceso" alt={t('Acceso principal de la bodega', 'Warehouse main entrance')} sizes="(max-width:900px) 100vw, 50vw" />
+  <section class="sec light" id={t('el-condominio', 'the-condominium')}><div class="wrap split2">
+    <div class="frame rv reveal"><Img name="bodega-acceso" alt={t('Acceso principal de la bodega', 'Warehouse main entrance')} sizes="(max-width:900px) 100vw, 50vw" />
       <div class="tag"><div class="v num">FFM-IB-5</div><div class="k">{t('Venta o alquiler', 'Sale or lease')}</div></div></div>
     <div class="rv"><span class="eyebrow">{t('El condominio', 'The condominium')}</span>
       <h2 class="h-l" style="margin-top:22px" set:html={t('Infraestructura terminada. <b>Solo falta su empresa.</b>', 'Infrastructure in place. <b>Your company is next.</b>')} />
@@ -44,7 +45,7 @@ const strip = GAL.filter((g) => ['bodega-aerea', 'nave-mezzanine', 'oficina-vidr
       <ul class="feat">
         <li><Icon name="road" />{t('Calle interna asfaltada con acceso vehicular', 'Paved internal road with vehicle access')}</li>
         <li><Icon name="drop" />{t('Planta de tratamiento y laguna de retención', 'Treatment plant and retention pond')}</li>
-        <li><Icon name="doc" />{t('Uso industrial, bodegas, ofibodegas y oficinas', 'Zoned for industry, warehouses, flex space and offices')}</li>
+        <li><Icon name="doc" />{t('Uso industrial, bodegas, ofibodegas y oficinas', 'Permitted uses: industry, warehouses, flex space and offices')}</li>
         <li><Icon name="leaf" />{t('Zonas verdes y protección del río Bermúdez', 'Green areas and Bermúdez River buffer')}</li>
       </ul>
       <a class="link-arrow" style="margin-top:36px" href={href('project', lang)}>{t('Conocer el proyecto', 'About the project')} <Arrow /></a>
@@ -55,12 +56,12 @@ const strip = GAL.filter((g) => ['bodega-aerea', 'nave-mezzanine', 'oficina-vidr
     <a class="path" href={href('warehouse', lang)}><Img name="nave-panoramica" alt={t('Interior de la bodega', 'Warehouse interior')} sizes="(max-width:820px) 100vw, 50vw" />
       <div class="in"><span class="eyebrow" style="color:var(--sand)">{t('Para operar', 'To operate')}</span>
         <h2 class="h-l" set:html={t('Bodega de <b>5,500 m²</b>', 'A <b>5,500 m²</b> warehouse')} />
-        <p class="price">{t('Alquiler desde $8/m² · Venta ', 'Lease from $8/m² · Sale ')}{money(5600000)}</p>
+        <p class="price">{t('Alquiler $8/m² + IVA · Venta ', 'Lease $8/m² + VAT · Sale ')}{money(LOTS.ib5.price)}</p>
         <span class="link-arrow">{t('Ver la bodega', 'See the warehouse')} <Arrow /></span></div></a>
     <a class="path" href={href('availability', lang)}><Img name="entorno-aereo" alt={t('Lotes industriales disponibles', 'Available industrial lots')} sizes="(max-width:820px) 100vw, 50vw" />
       <div class="in"><span class="eyebrow" style="color:var(--sand)">{t('Para invertir', 'To invest')}</span>
-        <h2 class="h-l" set:html={t('Lotes desde <b>4,154 m²</b>', 'Lots from <b>4,154 m²</b>')} />
-        <p class="price">{t('Lotes del fondo desde', 'Rear lots from')} {money(1038532)} · $250/m² · {t('Frente a calle: $350/m² + casa', 'Street front: $350/m² + house')}</p>
+        <h2 class="h-l" set:html={t('Lotes desde <b>4,154.13 m²</b>', 'Lots from <b>4,154.13 m²</b>')} />
+        <p class="price">{t('Lotes del fondo desde', 'Rear lots from')} {money(LOTS.ib8.price)} · $250/m² · {t('Frente a calle: $350/m² + casa existente', 'Street front: $350/m² + existing house')}</p>
         <span class="link-arrow">{t('Ver lotes', 'See the lots')} <Arrow /></span></div></a>
   </section>
 
@@ -75,7 +76,7 @@ const strip = GAL.filter((g) => ['bodega-aerea', 'nave-mezzanine', 'oficina-vidr
     <div class="sec-head split"><div><span class="eyebrow">{t('Disponibilidad', 'Availability')}</span>
       <h2 class="h-l" style="margin-top:22px" set:html={t('Fincas <b>disponibles</b>', 'Available <b>lots</b>')} /></div>
       <div style="justify-self:end"><a class="btn btn-line" href={href('availability', lang)}>{t('Comparar todas', 'Compare all')} <Arrow /></a></div></div>
-    <div class="cards">{['ib5', 'ib6', 'ib7', 'ib8'].map((id) => <LotCard id={id} lang={lang} />)}</div>
+    <div class="cards home" id={t('propiedades', 'properties')}>{['ib4', 'ib5', 'ib6', 'ib7', 'ib8'].map((id, i) => <LotCard id={id} lang={lang} wide={i < 2} />)}</div>
   </div></section>
 
   <Bundle lang={lang} />

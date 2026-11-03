@@ -49,8 +49,8 @@ const specs: [string, string, string, string, string][] = [
     <div class="tbl-wrap tbl-dark"><table class="av">
       <thead><tr><th>{t('Finca', 'Lot')}</th><th>{t('Tipo', 'Type')}</th><th class="r">{t('Terreno', 'Land')}</th><th class="r">{t('Construcción', 'Built')}</th><th>{t('Estado', 'Status')}</th></tr></thead>
       <tbody>{Object.values(LOTS).map((v) => (
-        <tr><td data-l={t('Finca', 'Lot')} class="id"><a href={href(`lot:${v.id}`, lang)}>{v.code}</a></td><td data-l={t('Tipo', 'Type')}>{v.kind === 'warehouse' ? t('Bodega construida', 'Built warehouse') : t(v.name_es, v.name_en)}</td>
-          <td data-l={t('Terreno', 'Land')} class="r">{v.kind === 'warehouse' ? m2(v.land!) : m2(v.total!)}</td><td data-l={t('Construcción', 'Built')} class="r">{v.kind === 'warehouse' ? m2(v.built!, 0) : '—'}</td><td data-l={t('Estado', 'Status')}>{t(v.status_es, v.status_en)}</td></tr>))}</tbody>
+        <tr><td data-l={t('Finca', 'Lot')} class="id"><a href={href(`lot:${v.id}`, lang)}>{v.code}</a></td><td data-l={t('Tipo', 'Type')}>{v.kind === 'warehouse' ? t('Bodega construida', 'Built warehouse') : v.kind === 'house' ? t('Terreno y casa existente', 'Land with existing house') : t('Lote industrial', 'Industrial lot')}</td>
+          <td data-l={t('Terreno', 'Land')} class="r">{v.kind === 'warehouse' ? m2(v.land!) : m2(v.total!)}</td><td data-l={t('Construcción', 'Built')} class="r">{v.kind === 'warehouse' ? m2(v.built!, 0) : v.kind === 'house' ? t('Casa existente', 'Existing house') : '—'}</td><td data-l={t('Estado', 'Status')}>{t(v.status_es, v.status_en)}</td></tr>))}</tbody>
     </table></div>
     <div style="margin-top:40px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-red" href={href('availability', lang)}>{t('Ver precios y plano interactivo', 'See prices and interactive plan')} <Arrow /></a>
       <a class="btn btn-ghost" href={href('availability', lang) + '#' + t('proyecto-completo', 'entire-project')}>{t('Comprar todo el proyecto', 'Buy the entire project')}</a></div>

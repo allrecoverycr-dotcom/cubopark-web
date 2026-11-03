@@ -24,17 +24,17 @@ const acc: [string, string, string][] = [['Radial Lindora', 'Radial Lindora', ''
         <a class="btn btn-red" href={SITE.maps} target="_blank" rel="noopener">{t('Abrir en Google Maps', 'Open in Google Maps')} <Arrow /></a>
         <a class="btn btn-ghost" href={SITE.waze} target="_blank" rel="noopener">Waze</a></div></div>
     <div class="rv"><span class="eyebrow">{t('Conexiones', 'Connections')}</span>
-      <div class="access num" style="margin-top:22px">{acc.map(([es, en, min]) => <div><span>{t(es, en)}</span>{min ? <span>{min}</span> : <span class="ph">{t('min por confirmar', 'min TBC')}</span>}</div>)}</div></div>
+      <div class="access num" style="margin-top:22px">{acc.map(([es, en, min]) => <div><span>{t(es, en)}</span>{min && <span>{min}</span>}</div>)}</div></div>
   </div></section>
   <section class="sec light"><div class="wrap split2">
     <div class="frame rv"><Img name="aerial-panorama" alt={t('Vista del entorno de Cubo Park', 'View of Cubo Park surroundings')} sizes="(max-width:900px) 100vw, 50vw" /></div>
     <div class="rv"><span class="eyebrow">{t('El entorno', 'The area')}</span>
       <h2 class="h-l" style="margin-top:22px" set:html={t('Rodeado de <b>industria y servicios</b>', 'Surrounded by <b>industry and services</b>')} />
-      <p class="lead" style="margin-top:24px">{t('Cubo Park colinda con parques de bodegas, centros de distribución y empresas de servicios. El sector concentra mano de obra calificada, proveedores y conexión rápida con las principales rutas nacionales.', 'Cubo Park borders warehouse parks, distribution centers and service companies. The area offers skilled labor, suppliers and quick links to the main national highways.')}</p>
+      <p class="lead" style="margin-top:24px">{t('Cubo Park colinda con parques de bodegas, centros de distribución y empresas de servicios, en el corredor industrial del oeste del Valle Central, con conexión a Radial Lindora y a la Ruta 27.', 'Cubo Park borders warehouse parks, distribution centers and service companies in the western industrial corridor of the Central Valley, with links to Radial Lindora and Route 27.')}</p>
       <ul class="feat">
         <li><Icon name="pin" />{t('Zona industrial del oeste', 'Western industrial zone')}</li>
-        <li><Icon name="truck" />{t('Acceso para carga pesada', 'Heavy-truck access')}</li>
-        <li><Icon name="shield" />{t('Condominio con acceso controlado', 'Controlled-access condominium')}</li>
+        <li><Icon name="road" />{t('Calle interna asfaltada del condominio', 'Paved internal condominium road')}</li>
+        <li><Icon name="truck" />{t('Conexión con Radial Lindora y Ruta 27', 'Links to Radial Lindora and Route 27')}</li>
         <li><Icon name="leaf" />{t('Colinda con el río Bermúdez', 'Borders the Bermúdez River')}</li>
       </ul></div>
   </div></section>

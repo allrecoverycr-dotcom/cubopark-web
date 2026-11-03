@@ -1,13 +1,31 @@
 ---
+// Tarjeta comercial de una finca: identificación, tipo, superficies, precio por m² (cuando aplica),
+// precio total, condición y accesos a la ficha y al formulario con la finca ya seleccionada.
 import Img from './Img.astro';
-import { LOTS } from '../data/lots';
-import { useT, href, money, m2, type Lang } from '../i18n';
-const { id, lang } = Astro.props as { id: string; lang: Lang };
+import Arrow from './Arrow.astro';
+import { LOTS, ppm, houseValue } from '../data/lots';
+import { useT, href, ask, interestOf, money, m2, type Lang } from '../i18n';
+const { id, lang, wide = false } = Astro.props as { id: string; lang: Lang; wide?: boolean };
 const t = useT(lang); const v = LOTS[id];
-const area = id === 'ib5' ? `${m2(v.built!, 0)} ${t('constr.', 'built')}` : m2(v.total!);
+const url = href(`lot:${id}`, lang);
+const kind = v.kind === 'warehouse' ? t('Bodega industrial', 'Industrial warehouse') : v.kind === 'house' ? t('Terreno con casa existente', 'Land with existing house') : t('Lote industrial', 'Industrial lot');
+const rows: [string, string][] = v.kind === 'warehouse'
+  ? [[t('Terreno', 'Land'), m2(v.land!)], [t('Construcción', 'Building'), m2(v.built!, 0)], [t('Precio por m²', 'Price per m²'), t('Precio global', 'Package price')]]
+  : v.kind === 'house'
+  ? [[t('Terreno', 'Land'), m2(v.total!)], [t('Construcción', 'Building'), t('Casa existente', 'Existing house')], [t('Terreno por m²', 'Land per m²'), `${money(ppm(v))} + ${t('casa', 'house')} ${money(houseValue(v))}`]]
+  : [[t('Área total', 'Total area'), m2(v.total!)], [t('Útil + zona verde', 'Usable + green zone'), `${m2(v.lot!, 0)} + ${m2(v.green!, 0)}`], [t('Precio por m²', 'Price per m²'), money(ppm(v))]];
 ---
-<a class="card rv" href={href(`lot:${id}`, lang)}>
-  <div class="im"><Img name={v.img} alt={v.code} sizes="(max-width:560px) 100vw, 25vw" /></div>
-  <div class="bd"><span class="id">{v.code} · {t(v.status_es, v.status_en)}</span><h3>{t(v.name_es, v.name_en)}</h3>
-    <div class="meta"><span>{area}</span><span class="p">{money(v.price)}</span></div></div>
-</a>
+<article class:list={['card', { wide }]}>
+  <a class="im" href={url} tabindex="-1" aria-hidden="true"><Img name={v.img} alt="" sizes={wide ? '(max-width:700px) 100vw, 50vw' : '(max-width:700px) 100vw, 33vw'} /></a>
+  <div class="bd">
+    <div class="top"><span class="id">{v.code}</span><span class:list={['cond', { both: v.kind === 'warehouse' }]}>{t(v.status_es, v.status_en)}</span></div>
+    <h3><a href={url}>{kind}</a></h3>
+    <dl class="cm num">{rows.map(([k, val]) => <div><dt>{k}</dt><dd>{val}</dd></div>)}</dl>
+    <div class="pr num"><span>{v.kind === 'warehouse' ? t('Venta', 'Sale') : t('Precio total', 'Total price')}</span><b>{money(v.price)}</b></div>
+    {v.kind === 'warehouse' && <p class="rent num">{t('Alquiler: $8/m² + IVA · mantenimiento $1/m²', 'Lease: $8/m² + VAT · maintenance $1/m²')}</p>}
+    <div class="acts">
+      <a class="btn btn-line sm" href={url}>{t('Ver ficha', 'View details')} <Arrow /></a>
+      <a class="btn btn-red sm" href={ask(lang, interestOf(id), 'info')}>{t('Solicitar información', 'Request information')}</a>
+    </div>
+  </div>
+</article>
