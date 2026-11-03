@@ -38,7 +38,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: `${v.code
         <div><div class="v">{m2(v.lot!)}</div><div class="k">{t('Área de la finca', 'Lot area')}</div></div>
         <div><div class="v">{v.green ? m2(v.green) : '—'}</div><div class="k">{t('Zona verde A.C.L.R.', 'A.C.L.R. green zone')}</div></div>
         <div><div class="v">{m2(v.total!)}</div><div class="k">{t('Área total', 'Total area')}</div></div>
-        <div><div class="v">{money(ppm(v))}</div><div class="k">{isHouse ? t('Precio por m² del terreno', 'Land price per m²') : t('Precio por m²', 'Price per m²')}</div></div>
+        <div><div class="v">{money(ppm(v))}</div><div class="k">{isHouse ? t('Precio por m² del terreno', 'Land price per m²') : t('Precio por m² (área total)', 'Price per m² (total area)')}</div></div>
         <div><div class="v">Industrial</div><div class="k">{t('Uso', 'Use')}</div></div>
         <div><div class="v">{isHouse ? t('Calle pública', 'Public street') : t('Calle interna', 'Internal road')}</div><div class="k">{t('Frente', 'Frontage')}</div></div>
       </div></div>
@@ -68,7 +68,12 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: `${v.code
           <div class="tot"><span>{t('Total terreno y casa', 'Total land & house')}</span><span>{money(v.price)}</span></div>
         </div>
       ) : (
-        <div class="sub">USD · {m2(v.total!)} × {money(ppm(v))}/m²</div>
+        <div class="breakdown">
+          <div><span>{t('Finca filial', 'Lot')}</span><span>{m2(v.lot!)}</span></div>
+          <div><span>{t('Zona verde', 'Green zone')} {v.zv} A.C.L.R.</span><span>{m2(v.green!)}</span></div>
+          <div><span>{t('Área total', 'Total area')} × {money(ppm(v))}/m²</span><span>{m2(v.total!)}</span></div>
+          <div class="tot"><span>{t('Precio de venta', 'Sale price')}</span><span>{money(v.price)}</span></div>
+        </div>
       )}
       <hr />
       <a class="btn btn-red" href={contact}>{t('Solicitar información', 'Request information')} <Arrow /></a>

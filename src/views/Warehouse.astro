@@ -26,7 +26,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: 'Bodega i
     <div>
       <div class="block"><div class="facts num">
         <div><div class="v">5,500 m²</div><div class="k">{t('Construcción', 'Building area')}</div></div>
-        <div><div class="v">4,231 m²</div><div class="k">{t('Terreno (catastro)', 'Land (cadastral)')}</div></div>
+        <div><div class="v">4,230.89 m²</div><div class="k">{t('Terreno (catastro)', 'Land (cadastral)')}</div></div>
         <div><div class="v">2</div><div class="k">{t('Niveles de mezzanine', 'Mezzanine levels')}</div></div>
         <div><div class="v">$8/m²</div><div class="k">{t('Alquiler + IVA', 'Lease + VAT')}</div></div>
         <div><div class="v">$1/m²</div><div class="k">{t('Mantenimiento', 'Maintenance')}</div></div>
@@ -63,7 +63,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: 'Bodega i
         <div class="mini-gal">{gal.map((n, i) => <div class={i === 0 ? 'big' : undefined} data-lb="bodega" data-full={`/img/${n}.webp`} data-cap={t(CAP[n][0], CAP[n][1])}><Img name={n} alt={t(CAP[n][0], CAP[n][1])} sizes="33vw" /></div>)}</div></div>
       <div class="block"><h2>{t('Plano catastrado', 'Cadastral survey')}</h2>
         <div class="docs"><img src="/img/plano-ffm-ib-5.webp" width="1386" height="1906" alt={t('Plano catastrado FFM-IB-5', 'Cadastral survey FFM-IB-5')} data-lb="plano" data-full="/img/plano-ffm-ib-5.webp" loading="lazy" />
-          <div><h3 style="font-weight:500;font-size:1.1rem">FFM-IB-5</h3><p class="muted" style="margin-top:8px">{t('Área según plano catastrado: 4,231 m².', 'Area per cadastral survey: 4,231 m².')}</p>
+          <div><h3 style="font-weight:500;font-size:1.1rem">FFM-IB-5</h3><p class="muted" style="margin-top:8px">{t('Área según plano catastrado: 4,230.89 m².', 'Area per cadastral survey: 4,230.89 m².')}</p>
             <a class="link-arrow" style="margin-top:16px" href="/docs/plano-catastrado-ffm-ib-5.pdf" target="_blank" rel="noopener">{t('Descargar PDF', 'Download PDF')} <Arrow /></a></div></div></div>
     </div>
     <aside class="pricebox">
@@ -81,7 +81,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: 'Bodega i
       <div data-pane="sale" hidden>
         <div class="k">{t('Precio de venta', 'Sale price')}</div>
         <div class="v num" style="margin-top:10px">{money(w.price)}</div>
-        <div class="sub" style="margin-top:12px">{t('Bodega de 5,500 m² sobre terreno de 4,231 m². Precio en USD.', '5,500 m² warehouse on 4,231 m² of land. Price in USD.')}</div>
+        <div class="sub" style="margin-top:12px">{t('Precio global que incluye el terreno de 4,230.89 m² y la bodega de 5,500 m² construidos. En USD.', 'Package price including the 4,230.89 m² of land and the 5,500 m² built warehouse. In USD.')}</div>
       </div>
       <hr />
       <a class="btn btn-red" href={contact}>{t('Solicitar información', 'Request information')} <Arrow /></a>

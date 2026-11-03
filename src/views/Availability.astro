@@ -36,7 +36,7 @@ const w = LOTS.ib5;
         {['ib4', 'ib5', 'ib6', 'ib7', 'ib8'].map((k) => {
           const v = LOTS[k];
           return k === 'ib5' ? (
-            <tr data-cat="sale rent"><td class="id">{v.code}</td><td>{t('Bodega · 5,500 m² construidos', 'Warehouse · 5,500 m² built')}</td><td class="r">{m2(w.land!, 0)}</td><td class="r">—</td><td class="r">{m2(w.land!, 0)}</td>
+            <tr data-cat="sale rent"><td class="id">{v.code}</td><td>{t('Bodega · 5,500 m² construidos', 'Warehouse · 5,500 m² built')}</td><td class="r">{m2(w.land!)}</td><td class="r">—</td><td class="r">{m2(w.land!)}</td>
               <td class="r pr">{money(v.price)}<br /><span class="muted" style="font-size:.8rem;font-weight:400">{t('o $8/m² + IVA', 'or $8/m² + VAT')}</span></td><td class="r">—</td>
               <td><span class="badge both">{t('Venta / Alquiler', 'Sale / Lease')}</span></td><td><a class="link-arrow" href={href('lot:ib5', lang)}>{t('Ficha', 'Details')}</a></td></tr>
           ) : (

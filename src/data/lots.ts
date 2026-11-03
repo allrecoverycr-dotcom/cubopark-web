@@ -25,7 +25,7 @@ export type Lot = {
 export const LOTS: Record<string, Lot> = {
   ib4: { id: 'ib4', code: 'FFM-IB-4', kind: 'house', name_es: 'Terreno y casa', name_en: 'Land & house', lot: 5452.3, green: 0, total: 5452.3, price: 2200000, rate: 350,
     status_es: 'En venta', status_en: 'For sale', img: 'casa-ib4', imgs: ['casa-ib4', 'casa-ib4-2', 'casa-entorno'] },
-  ib5: { id: 'ib5', code: 'FFM-IB-5', kind: 'warehouse', name_es: 'Bodega industrial', name_en: 'Industrial warehouse', built: 5500, land: 4231, price: 5600000, rent: 8, fee: 1,
+  ib5: { id: 'ib5', code: 'FFM-IB-5', kind: 'warehouse', name_es: 'Bodega industrial', name_en: 'Industrial warehouse', built: 5500, land: 4230.89, price: 5600000, rent: 8, fee: 1,
     status_es: 'Venta o alquiler', status_en: 'Sale or lease', img: 'bodega-aerea' },
   ib6: { id: 'ib6', code: 'FFM-IB-6', kind: 'lot', name_es: 'Lote industrial', name_en: 'Industrial lot', lot: 3631.08, green: 1839.36, total: 5470.44, price: 1367610, zv: '2', rate: 250,
     status_es: 'En venta', status_en: 'For sale', img: 'terreno-aereo', imgs: ['terreno-aereo', 'calle-interna', 'terreno-aereo-2'] },
@@ -40,6 +40,8 @@ export const LOT_IDS = ['ib4', 'ib6', 'ib7', 'ib8'];
 export const ppm = (l: Lot) => l.rate || 0;
 export const landValue = (l: Lot) => (l.rate || 0) * (l.total || 0);
 export const houseValue = (l: Lot) => (l.kind === 'house' ? l.price - landValue(l) : 0);
+// Verificación: en los lotes del fondo el precio = $250 × área total (finca + zona verde A.C.L.R.)
+for (const k of ['ib6', 'ib7', 'ib8']) { const l = LOTS[k]; if (Math.abs((l.rate || 0) * (l.total || 0) - l.price) > 1) throw new Error('Precio inconsistente en ' + l.code); }
 export const LAND_TOTAL = LOT_IDS.reduce((s, k) => s + (LOTS[k].total || 0), 0);
 
 export const WAREHOUSE = (() => {
