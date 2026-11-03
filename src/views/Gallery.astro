@@ -1,25 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
 import Img from '../components/Img.astro';
+import Phero from '../components/Phero.astro';
 import { GAL } from '../data/lots';
-import { useT, href, type Lang } from '../i18n';
+import { useT, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
-const cats: [string, string, string][] = [['all', 'Todas', 'All'], ['aerea', 'Aéreas', 'Aerial'], ['exterior', 'Exterior', 'Exterior'], ['interior', 'Nave', 'Hall'], ['oficinas', 'Oficinas', 'Offices'], ['terreno', 'Terrenos', 'Land']];
+const cats: [string, string, string][] = [['all', 'Todas', 'All'], ['aerea', 'Aéreas', 'Aerial'], ['exterior', 'Exterior', 'Exterior'], ['interior', 'Nave', 'Warehouse hall'], ['oficinas', 'Oficinas', 'Offices'], ['terreno', 'Terrenos', 'Land']];
 ---
-<Base lang={lang} route="gallery"
+<Base lang={lang} route="gallery" image="nave-mezzanine"
   title={t('Galería | Cubo Park Condominio', 'Gallery | Cubo Park Condominio')}
   description={t('Fotografías aéreas e interiores de la bodega y los lotes industriales de Cubo Park en San Rafael de Alajuela.', 'Aerial and interior photos of the warehouse and industrial lots at Cubo Park in San Rafael, Alajuela.')}>
-  <section class="band" style="padding-top:calc(var(--bar) + 64px)" aria-labelledby="g-h">
-    <div class="gal-head">
-      <div class="page-head">
-        <nav class="crumbs" aria-label={t('Ruta', 'Breadcrumb')}><a href={href('home', lang)}>{t('Inicio', 'Home')}</a><span aria-hidden="true">/</span><span>{t('Galería', 'Gallery')}</span></nav>
-        <h1 id="g-h" class="rise">{t('La propiedad en fotos', 'The property in photos')}</h1>
-      </div>
-      <div class="filters rise" data-filter-group="#gal" role="group" aria-label={t('Filtrar fotos', 'Filter photos')}>{cats.map(([c, es, en]) => <button type="button" data-f={c} aria-pressed={c === 'all' ? 'true' : 'false'}>{t(es, en)}</button>)}</div>
+  <Phero lang={lang} img="nave-mezzanine" crumbs={[[t('Galería', 'Gallery')]]}
+    h1={t('Galería <b>del proyecto</b>', 'Project <b>gallery</b>')}
+    lead={t('Fotografía aérea, interiores de la bodega y los lotes disponibles.', 'Aerial photography, warehouse interiors and the available lots.')} />
+  <section class="sec light"><div class="wrap">
+    <div class="filters" data-filter-group="#gal">{cats.map(([c, es, en]) => <button class={c === 'all' ? 'f on' : 'f'} data-f={c}>{t(es, en)}</button>)}</div>
+    <div class="masonry" id="gal">
+      {GAL.map(([n, c, es, en]) => <figure data-cat={c} data-lb="gal" data-full={`/img/${n}.webp`} data-cap={t(es, en)}><Img name={n} alt={t(es, en)} sizes="(max-width:700px) 100vw, 33vw" /><figcaption>{t(es, en)}</figcaption></figure>)}
     </div>
-    <div class="mosaic" id="gal">
-      {GAL.map(([n, c, es, en]) => <figure data-cat={c}><button type="button" data-lb="gal" data-full={`/img/${n}.webp`} data-cap={t(es, en)} aria-label={t(es, en)}><Img name={n} alt={t(es, en)} sizes="(max-width:700px) 100vw, 33vw" /></button><figcaption>{t(es, en)}</figcaption></figure>)}
-    </div>
-  </section>
+  </div></section>
 </Base>

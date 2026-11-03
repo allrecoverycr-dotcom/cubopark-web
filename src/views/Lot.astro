@@ -1,8 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
 import Arrow from '../components/Arrow.astro';
-import Stage from '../components/Stage.astro';
-import Planner from '../components/Planner.astro';
+import Phero from '../components/Phero.astro';
+import Plan from '../components/Plan.astro';
+import LotCard from '../components/LotCard.astro';
 import { LOTS, ppm, landValue, houseValue } from '../data/lots';
 import { SITE } from '../data/site';
 import { useT, href, money, m2, type Lang } from '../i18n';
@@ -14,99 +16,73 @@ const isHouse = v.kind === 'house';
 const pct = v.green ? (v.lot! / v.total!) * 100 : 100;
 const total0 = Math.round(v.total!).toLocaleString('en-US');
 const contact = href('contact', lang) + '?interes=' + id;
+const desc = isHouse
+  ? t('La finca FFM-IB-4 está a la entrada del condominio, con frente a la calle pública. Incluye una casa existente con jardines y árboles maduros. Por su ubicación funciona para oficinas corporativas, showroom con exhibición o un desarrollo industrial de frente a calle. El terreno se cotiza a $350 por m², más el valor de la casa.', 'Lot FFM-IB-4 sits at the condominium entrance, fronting the public street. It includes an existing house with mature gardens and trees. Its position suits corporate offices, a showroom or a street-front industrial development. The land is priced at $350 per m², plus the value of the house.')
+  : t(`La finca ${v.code} tiene ${m2(v.lot!)} de área útil con frente a la calle interna del condominio, más ${m2(v.green!)} de zona verde A.C.L.R. asignada (zona verde ${v.zv}). Está destinada a uso industrial, bodegas, ofibodegas y oficinas, con acceso directo a la infraestructura común.`,
+      `Lot ${v.code} has ${m2(v.lot!)} of usable area facing the condominium’s internal road, plus ${m2(v.green!)} of assigned A.C.L.R. green zone (green zone ${v.zv}). It is designated for industrial, warehouse, flex-space and office use, with direct access to the shared infrastructure.`);
 const kind = isHouse ? t('Terreno y casa', 'Land & house') : t('Lote industrial', 'Industrial lot');
-const imgs = v.imgs || [v.img];
-const others = ['ib4', 'ib5', 'ib6', 'ib7', 'ib8'].filter((o) => o !== id);
-const otherLine = (k: string) => {
-  const o = LOTS[k];
-  if (o.kind === 'warehouse') return t('Bodega de 5,500 m², precio global', '5,500 m² warehouse, package price');
-  if (o.kind === 'house') return t('Terreno y casa, $350/m² + casa', 'Land and house, $350/m² + house');
-  return t(`Lote del fondo, ${m2(o.total!)} a $250/m²`, `Rear lot, ${m2(o.total!)} at $250/m²`);
-};
 const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: `${v.code} · Cubo Park`, price: v.price, priceCurrency: 'USD', url: SITE.domain + href(`lot:${id}`, lang),
   itemOffered: { '@type': 'Place', name: v.code, address: { '@type': 'PostalAddress', addressLocality: 'San Rafael', addressRegion: 'Alajuela', addressCountry: 'CR' },
     additionalProperty: { '@type': 'PropertyValue', name: 'floorSize', value: v.total, unitCode: 'MTK' } } };
 ---
-<Base lang={lang} route={`lot:${id}`} navKey="availability" jsonld={ld}
+<Base lang={lang} route={`lot:${id}`} navKey="availability" image={v.img} jsonld={ld}
   title={`${v.code} · ${kind} ${t('de', 'of')} ${total0} m² ${t('en venta', 'for sale')} | Cubo Park`}
-  description={isHouse
-    ? t(`FFM-IB-4: terreno de ${m2(v.total!)} a $350/m² con casa, frente a la calle principal en San Rafael de Alajuela. Total ${money(v.price)} USD.`, `FFM-IB-4: ${m2(v.total!)} of land at $350/m² with a house, on the main street in San Rafael, Alajuela. Total ${money(v.price)} USD.`)
-    : t(`${v.code}: lote industrial de ${m2(v.total!)} a $250/m² en San Rafael de Alajuela. Precio ${money(v.price)} USD.`, `${v.code}: industrial lot of ${m2(v.total!)} at $250/m² in San Rafael, Alajuela. Price ${money(v.price)} USD.`)}>
-  <div class="split" data-stage-root>
-    <Stage items={[{ k: 'top', img: imgs[0], alt: v.code }, { k: 'area', img: imgs[1] || imgs[0] }, { k: 'desc', img: imgs[2] || imgs[0] }, { k: 'doc', img: `plano-ffm-ib-${n}`, contain: true }]} />
-    <div class="col">
-      <section class="page-head" data-stage="top">
-        <nav class="crumbs" aria-label={t('Ruta', 'Breadcrumb')}><a href={href('home', lang)}>{t('Inicio', 'Home')}</a><span aria-hidden="true">/</span><a href={href('availability', lang)}>{t('Disponibilidad', 'Availability')}</a><span aria-hidden="true">/</span><span>{v.code}</span></nav>
-        <h1 class="rise">{v.code}</h1>
-        <p class="lead rise" style="--i:1">{isHouse ? t('Terreno y casa frente a la calle principal, a la entrada del condominio.', 'Land and house on the main street, at the condominium entrance.') : t(`Lote industrial de ${total0} m² al fondo de la propiedad, detrás de la bodega.`, `A ${total0} m² industrial lot at the back of the property, behind the warehouse.`)}</p>
-        <div class="price-card rise" style="--i:2">
-                    <div class="v num">{money(v.price)}</div>
-          <span class="k after">{isHouse ? t('Precio total, terreno y casa', 'Total price, land and house') : t('Precio de venta', 'Sale price')}</span>
-          {isHouse ? (
-            <div class="breakdown">
-              <div><span>{t('Terreno', 'Land')}, {m2(v.total!)} × {money(ppm(v))}/m²</span><span>{money(landValue(v))}</span></div>
-              <div><span>{t('Casa construida', 'Existing house')}</span><span>{money(houseValue(v))}</span></div>
-              <div class="tot"><span>{t('Total', 'Total')}</span><span>{money(v.price)}</span></div>
-            </div>
-          ) : (
-            <div class="breakdown">
-              <div><span>{t('Finca filial', 'Lot')}</span><span>{m2(v.lot!)}</span></div>
-              <div><span>{t(`Zona verde ${v.zv} asignada`, `Assigned green zone ${v.zv}`)}</span><span>{m2(v.green!)}</span></div>
-              <div><span>{t('Área total', 'Total area')} × {money(ppm(v))}/m²</span><span>{m2(v.total!)}</span></div>
-              <div class="tot"><span>{t('Precio', 'Price')}</span><span>{money(v.price)}</span></div>
-            </div>
-          )}
-        </div>
-        <div class="acts rise" style="--i:3"><a class="btn" href={contact}>{t('Agendar visita', 'Book a tour')} <Arrow /></a><a class="btn btn-quiet" href={contact}>{t('Solicitar información', 'Request information')}</a></div>
-      </section>
+  description={`${v.code}: ${kind.toLowerCase()} ${t('de', 'of')} ${m2(v.total!)} ${t('en San Rafael de Alajuela. Precio', 'in San Rafael, Alajuela. Price')} ${money(v.price)} USD.`}>
+  <Phero lang={lang} img={v.img} crumbs={[[t('Disponibilidad', 'Availability'), href('availability', lang)], [v.code]]}
+    h1={isHouse ? t('Terreno y casa <b>con frente a calle pública</b>', 'Land and house <b>on the public street</b>') : t(`Lote industrial <b>de ${total0} m²</b>`, `Industrial lot, <b>${total0} m²</b>`)}
+    lead={`${t('Finca filial', 'Lot')} ${v.code} · ${m2(v.total!)} · ${money(v.price)} USD`} />
 
-      <section data-stage="area" aria-labelledby="l-area">
-        <h2 id="l-area" class="rise">{t('Áreas', 'Areas')}</h2>
-        <dl class="spec num rise" style="--i:1">
-          <dt>{t('Finca filial según catastro', 'Lot per cadastral survey')}</dt><dd>{m2(v.lot!)}</dd>
-          {v.green ? <><dt>{t(`Zona verde ${v.zv} A.C.L.R.`, `A.C.L.R. green zone ${v.zv}`)}</dt><dd>{m2(v.green)}</dd><dt>{t('Área total', 'Total area')}</dt><dd>{m2(v.total!)}</dd></> : null}
-          <dt>{isHouse ? t('Precio del terreno por m²', 'Land price per m²') : t('Precio por m² del área total', 'Price per m² of total area')}</dt><dd>{money(ppm(v))}</dd>
-          <dt>{t('Frente', 'Frontage')}</dt><dd>{isHouse ? t('Calle pública', 'Public street') : t('Calle interna', 'Internal road')}</dd>
-          <dt>{t('Uso', 'Use')}</dt><dd>{t('Industrial, bodegas, ofibodegas, oficinas', 'Industry, warehouses, flex space, offices')}</dd>
-        </dl>
-        {v.green ? (<div class="rise" style="--i:2;display:grid;gap:12px">
-          <div class="bar-split"><span class="a" style={`width:${pct.toFixed(2)}%`}></span><span class="b" style={`width:${(100 - pct).toFixed(2)}%`}></span></div>
-          <div class="legend num"><span><i style="background:var(--accent)"></i>{t('Finca', 'Lot')} {pct.toFixed(2)}%</span><span><i style="background:var(--sand)"></i>{t('Zona verde', 'Green zone')} {(100 - pct).toFixed(2)}%</span></div>
-        </div>) : (<p class="rise" style="--i:2">{t('Las franjas verdes que rodean esta finca son áreas comunes del condominio y no forman parte de su área ni de su precio.', 'The green strips around this lot are common areas of the condominium and are not part of its area or price.')}</p>)}
-      </section>
-
-      <section data-stage="desc" aria-labelledby="l-desc">
-        <h2 id="l-desc" class="rise">{t('Descripción', 'Overview')}</h2>
-        <div class="prose rise" style="--i:1">
-          {isHouse ? (<>
-            <p>{t('La finca FFM-IB-4 está a la entrada del condominio, con frente a la calle pública. Incluye una casa existente con jardines y árboles maduros.', 'Lot FFM-IB-4 sits at the condominium entrance, fronting the public street. It includes an existing house with mature gardens and trees.')}</p>
-            <p>{t('Por su ubicación sirve para oficinas corporativas, un showroom o un desarrollo industrial con frente a calle. El terreno se cotiza a $350 por m², más el valor de la casa.', 'Its position suits corporate offices, a showroom or a street-front industrial development. The land is priced at $350 per m², plus the value of the house.')}</p>
-          </>) : (<>
-            <p>{t(`La finca ${v.code} tiene ${m2(v.lot!)} con frente a la calle interna, más ${m2(v.green!)} de zona verde asignada. Su precio se calcula a $250 por m² sobre el área total.`, `Lot ${v.code} has ${m2(v.lot!)} facing the internal road, plus ${m2(v.green!)} of assigned green zone. Its price is calculated at $250 per m² of total area.`)}</p>
-            <p>{t('Comparte la infraestructura del condominio: calle de acceso, planta de tratamiento, laguna de retención y zonas verdes.', 'It shares the condominium infrastructure: access road, treatment plant, retention pond and green areas.')}</p>
-          </>)}
-        </div>
-      </section>
-
-      <section data-stage="doc" aria-labelledby="l-doc">
-        <h2 id="l-doc" class="rise">{t('Plano catastrado', 'Cadastral survey')}</h2>
-        <div class="docimg rise" style="--i:1">
-          <button type="button" data-lb="plano" data-full={`/img/plano-ffm-ib-${n}.webp`} data-cap={`${t('Plano catastrado', 'Cadastral survey')} ${v.code}`} aria-label={`${t('Ampliar plano catastrado', 'Enlarge cadastral survey')} ${v.code}`}><img src={`/img/plano-ffm-ib-${n}.webp`} width="1386" height="1906" alt="" loading="lazy" /></button>
-          <div style="display:grid;gap:10px"><b>{v.code}</b><span class="muted num">{t(`Finca filial de ${m2(v.lot!)} según el Registro Público.`, `Lot of ${m2(v.lot!)} per the Public Registry.`)}</span><a class="link" href={`/docs/plano-catastrado-ffm-ib-${n}.pdf`} target="_blank" rel="noopener">{t('Descargar PDF', 'Download PDF')}</a></div>
-        </div>
-      </section>
-
-      <section aria-labelledby="l-other">
-        <h2 id="l-other" class="rise">{t('Las otras fincas', 'The other lots')}</h2>
-        <div class="other rise" style="--i:1">
-          {others.map((k) => <a href={href(`lot:${k}`, lang)}><b>{LOTS[k].code}</b><span class="p">{money(LOTS[k].price)}</span><span class="t">{otherLine(k)}</span></a>)}
-        </div>
-      </section>
+  <section class="sec light"><div class="wrap ficha">
+    <div>
+      <div class="block"><div class="facts num">
+        <div><div class="v">{m2(v.lot!)}</div><div class="k">{t('Área de la finca', 'Lot area')}</div></div>
+        <div><div class="v">{v.green ? m2(v.green) : '—'}</div><div class="k">{t('Zona verde A.C.L.R.', 'A.C.L.R. green zone')}</div></div>
+        <div><div class="v">{m2(v.total!)}</div><div class="k">{t('Área total', 'Total area')}</div></div>
+        <div><div class="v">{money(ppm(v))}</div><div class="k">{isHouse ? t('Precio por m² del terreno', 'Land price per m²') : t('Precio por m² (área total)', 'Price per m² (total area)')}</div></div>
+        <div><div class="v">Industrial</div><div class="k">{t('Uso', 'Use')}</div></div>
+        <div><div class="v">{isHouse ? t('Calle pública', 'Public street') : t('Calle interna', 'Internal road')}</div><div class="k">{t('Frente', 'Frontage')}</div></div>
+      </div></div>
+      <div class="block"><h2>{t('Descripción', 'Overview')}</h2><div class="prose"><p>{desc}</p>
+        <p>{t('Usos permitidos según el plano catastrado: industrial, bodegas, ofibodegas y oficinas.', 'Permitted uses per the cadastral survey: industrial, warehouses, flex space and offices.')}</p></div></div>
+      {v.green ? (
+        <div class="block"><h2>{t('Composición del área', 'Area breakdown')}</h2>
+          <div class="bar"><span class="a" style={`width:${pct.toFixed(2)}%`}></span><span class="b" style={`width:${(100 - pct).toFixed(2)}%`}></span></div>
+          <div class="bar-k num"><span><i style="background:var(--red)"></i>{t('Finca', 'Lot')} {m2(v.lot!)} · {pct.toFixed(2)}%</span>
+            <span><i style="background:var(--sand)"></i>{t('Zona verde', 'Green zone')} {v.zv} A.C.L.R. {m2(v.green)} · {(100 - pct).toFixed(2)}%</span></div></div>
+      ) : null}
+      <div class="block"><h2>{t('Ubicación en el condominio', 'Position in the condominium')}</h2><Plan lang={lang} selected={id} /></div>
+      <div class="block"><h2>{t('Fotografías', 'Photos')}</h2>
+        <div class="mini-gal">{(v.imgs || []).map((p, i) => <div class={i === 0 ? 'big' : undefined} data-lb="lot" data-full={`/img/${p}.webp`} data-cap={v.code}><Img name={p} alt={v.code} sizes="33vw" /></div>)}</div></div>
+      <div class="block"><h2>{t('Plano catastrado', 'Cadastral survey')}</h2>
+        <div class="docs"><img src={`/img/plano-ffm-ib-${n}.webp`} width="1386" height="1906" alt={`${t('Plano catastrado', 'Cadastral survey')} ${v.code}`} data-lb="plano" data-full={`/img/plano-ffm-ib-${n}.webp`} loading="lazy" />
+          <div><h3 style="font-weight:500;font-size:1.1rem">{v.code}</h3><p class="muted" style="margin-top:8px">{t('Plano catastrado inscrito.', 'Registered cadastral survey.')}</p>
+            <a class="link-arrow" style="margin-top:16px" href={`/docs/plano-catastrado-ffm-ib-${n}.pdf`} target="_blank" rel="noopener">{t('Descargar PDF', 'Download PDF')} <Arrow /></a></div></div></div>
     </div>
-  </div>
+    <aside class="pricebox">
+      <div class="k">{v.code} · {t(v.status_es, v.status_en)}</div>
+      <div class="v num">{money(v.price)}</div>
+      {isHouse ? (
+        <div class="breakdown">
+          <div><span>{t('Terreno', 'Land')} · {m2(v.total!)} × {money(ppm(v))}</span><span>{money(landValue(v))}</span></div>
+          <div><span>{t('Casa construida', 'Existing house')}</span><span>{money(houseValue(v))}</span></div>
+          <div class="tot"><span>{t('Total terreno y casa', 'Total land & house')}</span><span>{money(v.price)}</span></div>
+        </div>
+      ) : (
+        <div class="breakdown">
+          <div><span>{t('Finca filial', 'Lot')}</span><span>{m2(v.lot!)}</span></div>
+          <div><span>{t('Zona verde', 'Green zone')} {v.zv} A.C.L.R.</span><span>{m2(v.green!)}</span></div>
+          <div><span>{t('Área total', 'Total area')} × {money(ppm(v))}/m²</span><span>{m2(v.total!)}</span></div>
+          <div class="tot"><span>{t('Precio de venta', 'Sale price')}</span><span>{money(v.price)}</span></div>
+        </div>
+      )}
+      <hr />
+      <a class="btn btn-red" href={contact}>{t('Solicitar información', 'Request information')} <Arrow /></a>
+      <a class="btn btn-ghost" href={contact}>{t('Agendar visita', 'Book a tour')}</a>
+    </aside>
+  </div></section>
 
-  <section class="band band-dark" aria-labelledby="l-pos">
-    <div class="planner-head"><h2 id="l-pos" class="rise">{t('Dónde queda', 'Where it is')}</h2><p class="rise" style="--i:1">{isHouse ? t('A la entrada, sobre la calle pública. La bodega queda detrás.', 'At the entrance, on the public street. The warehouse stands behind it.') : t('Al fondo, sobre la calle interna, entre la bodega y el río Bermúdez.', 'At the back, on the internal road, between the warehouse and the Bermúdez River.')}</p></div>
-    <Planner lang={lang} mode="focus" selected={[id]} />
-  </section>
+  <section class="sec white"><div class="wrap">
+    <div class="sec-head"><span class="eyebrow">{t('Otras opciones', 'Other options')}</span><h2 class="h-m">{t('Más fincas en Cubo Park', 'More lots at Cubo Park')}</h2></div>
+    <div class="cards">{['ib4', 'ib5', 'ib6', 'ib7', 'ib8'].filter((o) => o !== id).map((o) => <LotCard id={o} lang={lang} />)}</div>
+  </div></section>
 </Base>
