@@ -7,7 +7,7 @@ import { SITE } from '../data/site';
 import { useT, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = useT(lang);
-const opts: [string, string, string][] = [['bodega-alquiler', 'Bodega FFM-IB-5 · Alquiler', 'Warehouse FFM-IB-5 · Lease'], ['bodega', 'Bodega FFM-IB-5 · Compra', 'Warehouse FFM-IB-5 · Purchase'],
+const opts: [string, string, string][] = [['todo', 'Todo el proyecto (5 fincas)', 'Entire project (5 lots)'], ['bodega-alquiler', 'Bodega FFM-IB-5 · Alquiler', 'Warehouse FFM-IB-5 · Lease'], ['bodega', 'Bodega FFM-IB-5 · Compra', 'Warehouse FFM-IB-5 · Purchase'],
   ['ib4', 'FFM-IB-4 · Terreno y casa', 'FFM-IB-4 · Land & house'], ['ib6', 'FFM-IB-6 · Lote industrial', 'FFM-IB-6 · Industrial lot'],
   ['ib7', 'FFM-IB-7 · Lote industrial', 'FFM-IB-7 · Industrial lot'], ['ib8', 'FFM-IB-8 · Lote industrial', 'FFM-IB-8 · Industrial lot'], ['otro', 'Otro', 'Other']];
 ---

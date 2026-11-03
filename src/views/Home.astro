@@ -5,6 +5,7 @@ import Icon from '../components/Icon.astro';
 import Arrow from '../components/Arrow.astro';
 import Plan from '../components/Plan.astro';
 import LotCard from '../components/LotCard.astro';
+import Bundle from '../components/Bundle.astro';
 import { GAL, LAND_TOTAL } from '../data/lots';
 import { useT, href, money, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
@@ -76,6 +77,8 @@ const strip = GAL.filter((g) => ['bodega-aerea', 'nave-mezzanine', 'oficina-vidr
       <div style="justify-self:end"><a class="btn btn-line" href={href('availability', lang)}>{t('Comparar todas', 'Compare all')} <Arrow /></a></div></div>
     <div class="cards">{['ib5', 'ib6', 'ib7', 'ib8'].map((id) => <LotCard id={id} lang={lang} />)}</div>
   </div></section>
+
+  <Bundle lang={lang} />
 
   <section class="sec white">
     <div class="wrap"><div class="sec-head split"><div><span class="eyebrow">{t('Galería', 'Gallery')}</span>

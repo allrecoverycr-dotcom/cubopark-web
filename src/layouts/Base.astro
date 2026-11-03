@@ -104,7 +104,7 @@ const ld = [org, ...(jsonld ? (Array.isArray(jsonld) ? jsonld : [jsonld]) : [])]
       <div><img class="lg" src="/img/logo-white.png" width="600" height="582" alt="Cubo Park Condominio" loading="lazy" />
         <p>{t('Condominio industrial y de bodegas de fincas filiales. San Rafael, Alajuela, Costa Rica.', 'Industrial and warehouse condominium with independent titled lots. San Rafael, Alajuela, Costa Rica.')}</p></div>
       <div><h2 class="fh">{t('Navegación', 'Explore')}</h2><ul>{NAV.map(([k, es, en]) => <li><a href={href(k, lang)}>{t(es, en)}</a></li>)}</ul></div>
-      <div><h2 class="fh">{t('Disponibles', 'Available')}</h2><ul>{Object.keys(LOTS).map((k) => <li><a href={href(`lot:${k}` as RouteKey, lang)}>{LOTS[k].code}</a></li>)}</ul></div>
+      <div><h2 class="fh">{t('Disponibles', 'Available')}</h2><ul>{Object.keys(LOTS).map((k) => <li><a href={href(`lot:${k}` as RouteKey, lang)}>{LOTS[k].code}</a></li>)}<li><a href={href('availability', lang) + '#' + t('proyecto-completo', 'entire-project')}>{t('Todo el proyecto', 'Entire project')}</a></li></ul></div>
       <div><h2 class="fh">{t('Contacto', 'Contact')}</h2><ul>
         <li><Ph>{SITE.contact.phone}</Ph></li><li><Ph>{SITE.contact.email}</Ph></li>
         <li>{SITE.address.street}, {SITE.address.locality}, {SITE.address.region}</li></ul></div>

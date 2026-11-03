@@ -92,3 +92,15 @@ export const GAL: [string, string, string, string][] = [
   ['casa-ib4', 'aerea terreno', 'Finca FFM-IB-4, terreno y casa', 'Lot FFM-IB-4, land and house'],
 ];
 export const CAP: Record<string, [string, string]> = Object.fromEntries(GAL.map((g) => [g[0], [g[2], g[3]]]));
+
+// Compra del proyecto completo (las 5 fincas disponibles).
+// Por defecto el precio es la suma de las fincas; para ofrecer un precio de paquete distinto, cámbielo en PACKAGE_PRICE.
+export const ALL_IDS = ['ib4', 'ib5', 'ib6', 'ib7', 'ib8'];
+export const SUM_PRICE = ALL_IDS.reduce((s, k) => s + LOTS[k].price, 0);
+export const PACKAGE_PRICE: number | null = null;
+export const BUNDLE = {
+  price: PACKAGE_PRICE ?? SUM_PRICE,
+  land: ALL_IDS.reduce((s, k) => s + (LOTS[k].kind === 'warehouse' ? LOTS[k].land || 0 : LOTS[k].total || 0), 0),
+  built: LOTS.ib5.built || 0,
+  count: ALL_IDS.length,
+};

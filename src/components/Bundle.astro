@@ -1,0 +1,47 @@
+---
+// Bloque "Comprar todo el proyecto": precio total y sumatoria de m².
+import Arrow from './Arrow.astro';
+import { LOTS, ALL_IDS, BUNDLE, SUM_PRICE } from '../data/lots';
+import { useT, href, money, m2, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = useT(lang);
+const contact = href('contact', lang) + '?interes=todo';
+---
+<section class="sec bundle" id={t('proyecto-completo', 'entire-project')}>
+  <div class="wrap">
+    <div class="bundle-g">
+      <div class="bundle-l">
+        <span class="eyebrow">{t('Oportunidad de inversión', 'Investment opportunity')}</span>
+        <h2 class="h-l" style="margin-top:22px" set:html={t('Adquiera <b>todo el proyecto</b>', 'Acquire <b>the entire project</b>')} />
+        <p class="lead" style="margin-top:22px">{t('Las cinco fincas disponibles en una sola compra: la bodega de 5,500 m² y los cuatro lotes, con toda la infraestructura del condominio.', 'All five available lots in a single purchase: the 5,500 m² warehouse and the four lots, with all of the condominium’s infrastructure.')}</p>
+        <div class="bundle-price">
+          <span class="k">{t('Precio total', 'Total price')}</span>
+          <span class="v num">{money(BUNDLE.price)} <small>USD</small></span>
+          {BUNDLE.price < SUM_PRICE && <span class="was num">{t('Suma individual', 'Individual total')}: {money(SUM_PRICE)}</span>}
+        </div>
+        <div class="bundle-stats num">
+          <div><span class="v">{m2(BUNDLE.land)}</span><span class="k">{t('De terreno', 'Of land')}</span></div>
+          <div><span class="v">{m2(BUNDLE.built, 0)}</span><span class="k">{t('Construidos', 'Built')}</span></div>
+          <div><span class="v">{BUNDLE.count}</span><span class="k">{t('Fincas filiales', 'Titled lots')}</span></div>
+        </div>
+        <div class="hero-ctas" style="margin-top:34px">
+          <a class="btn btn-red" href={contact}>{t('Solicitar información', 'Request information')} <Arrow /></a>
+          <a class="btn btn-ghost" href={contact}>{t('Agendar visita', 'Book a tour')}</a>
+        </div>
+      </div>
+      <div class="bundle-r">
+        <table class="bundle-t num">
+          <caption class="sr-only">{t('Desglose del proyecto completo', 'Entire project breakdown')}</caption>
+          <thead><tr><th>{t('Finca', 'Lot')}</th><th class="r">{t('Terreno', 'Land')}</th><th class="r">{t('Precio', 'Price')}</th></tr></thead>
+          <tbody>
+            {ALL_IDS.map((k) => { const v = LOTS[k]; return (
+              <tr><td><a href={href(`lot:${k}`, lang)}>{v.code}</a><span>{v.kind === 'warehouse' ? t('Bodega · 5,500 m² constr.', 'Warehouse · 5,500 m² built') : t(v.name_es, v.name_en)}</span></td>
+                <td class="r">{m2(v.kind === 'warehouse' ? v.land! : v.total!)}</td><td class="r">{money(v.price)}</td></tr>); })}
+          </tbody>
+          <tfoot><tr><td>{t('Total', 'Total')}</td><td class="r">{m2(BUNDLE.land)}</td><td class="r">{money(SUM_PRICE)}</td></tr></tfoot>
+        </table>
+        <p class="bundle-note">{t('Terreno de la bodega según plano catastrado (4,231 m²); lotes según área total con zona verde A.C.L.R. Precios en USD.', 'Warehouse land per cadastral survey (4,231 m²); lots per total area including A.C.L.R. green zone. Prices in USD.')}</p>
+      </div>
+    </div>
+  </div>
+</section>

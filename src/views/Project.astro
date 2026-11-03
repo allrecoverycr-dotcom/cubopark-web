@@ -52,6 +52,7 @@ const specs: [string, string, string, string, string][] = [
         <tr><td class="id"><a href={href(`lot:${v.id}`, lang)}>{v.code}</a></td><td>{v.kind === 'warehouse' ? t('Bodega construida', 'Built warehouse') : t(v.name_es, v.name_en)}</td>
           <td class="r">{v.kind === 'warehouse' ? m2(v.land!, 0) : m2(v.total!)}</td><td class="r">{v.kind === 'warehouse' ? m2(v.built!, 0) : '—'}</td><td>{t(v.status_es, v.status_en)}</td></tr>))}</tbody>
     </table></div>
-    <div style="margin-top:40px"><a class="btn btn-red" href={href('availability', lang)}>{t('Ver precios y plano interactivo', 'See prices and interactive plan')} <Arrow /></a></div>
+    <div style="margin-top:40px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-red" href={href('availability', lang)}>{t('Ver precios y plano interactivo', 'See prices and interactive plan')} <Arrow /></a>
+      <a class="btn btn-ghost" href={href('availability', lang) + '#' + t('proyecto-completo', 'entire-project')}>{t('Comprar todo el proyecto', 'Buy the entire project')}</a></div>
   </div></section>
 </Base>

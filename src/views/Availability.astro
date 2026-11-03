@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Phero from '../components/Phero.astro';
 import Plan from '../components/Plan.astro';
 import LotCard from '../components/LotCard.astro';
+import Bundle from '../components/Bundle.astro';
 import { LOTS, LOT_IDS, ppm } from '../data/lots';
 import { useT, href, money, m2, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
@@ -41,8 +42,12 @@ const w = LOTS.ib5;
         })}
       </tbody>
     </table></div>
+    <div class="cta-strip"><span class="t" set:html={t('¿Le interesa <b>todo el proyecto</b>? Vea el precio total y la sumatoria de m².', 'Interested in <b>the entire project</b>? See the total price and combined area.')} />
+      <a class="btn btn-red" href={'#' + t('proyecto-completo', 'entire-project')}>{t('Comprar todo el proyecto', 'Buy the entire project')}</a></div>
     <p class="muted" style="font-size:.82rem;margin-top:18px">{t('Áreas según planos catastrados y cuadros de áreas del anteproyecto. Precios en USD, sujetos a cambio sin previo aviso.', 'Areas per cadastral surveys and the preliminary project area tables. Prices in USD, subject to change without notice.')}</p>
   </div></section>
+
+  <Bundle lang={lang} />
 
   <section class="sec white"><div class="wrap"><div class="cards">{LOT_IDS.map((id) => <LotCard id={id} lang={lang} />)}</div></div></section>
 </Base>
