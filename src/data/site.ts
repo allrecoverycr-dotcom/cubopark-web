@@ -8,8 +8,8 @@
 //   hours_es / hours_en               → horario de atención / visitas
 //
 // PENDIENTES (validar con el propietario antes de completar):
-//   - Teléfono comercial, WhatsApp, correo, horario de atención y de visitas
-//   - Correo que recibe el formulario: variable $TO en public/contacto.php
+//   - Teléfono comercial, WhatsApp, horario de atención y de visitas
+//   - Correo que recibe el formulario: info@cuboparkcr.com (variable $TO en public/contacto.php)
 export const SITE = {
   name: 'Cubo Park Condominio',
   domain: 'https://cuboparkcr.com',
@@ -22,7 +22,7 @@ export const SITE = {
   contact: {
     phone: null as string | null,
     whatsapp: null as string | null,
-    email: null as string | null,
+    email: 'info@cuboparkcr.com' as string | null,
     hours_es: null as string | null,
     hours_en: null as string | null,
   },

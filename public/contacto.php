@@ -1,8 +1,8 @@
 <?php
 // Recibe el formulario de contacto de cuboparkcr.com y lo envía por correo.
-// PENDIENTE: cambie $TO por el buzón real que debe recibir las solicitudes (créelo en hPanel > Correos).
-$TO = 'correo@cuboparkcr.com';
-$FROM = 'no-reply@cuboparkcr.com'; // debe ser un buzón del dominio (créelo en hPanel > Correos)
+// Buzón que recibe las solicitudes del formulario.
+$TO = 'info@cuboparkcr.com';
+$FROM = 'info@cuboparkcr.com'; // buzón existente del dominio (Hostinger exige un remitente del propio dominio)
 
 header('Content-Type: application/json; charset=utf-8');
 header('X-Robots-Tag: noindex');
