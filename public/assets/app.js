@@ -42,11 +42,11 @@
       lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
       d.addEventListener('keydown', function (e) { if (lb.hidden) return; if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowRight') step(1); if (e.key === 'ArrowLeft') step(-1); });
     }
-    curG = groups[g]; cur = i; render(); lb.hidden = false; d.body.style.overflow = 'hidden'; lb.querySelector('.x').focus();
+    curG = groups[g]; cur = i; lbRender(); lb.hidden = false; d.body.style.overflow = 'hidden'; lb.querySelector('.x').focus();
   }
   function visible() { return curG.filter(function (el) { return !el.closest('[hidden]'); }); }
-  function render() { var el = curG[cur]; lbImg.src = el.getAttribute('data-full'); var c = el.getAttribute('data-cap') || ''; lbCap.textContent = c; lbImg.alt = c; }
-  function step(s) { var v = visible(); var k = v.indexOf(curG[cur]); k = (k + s + v.length) % v.length; cur = curG.indexOf(v[k]); render(); }
+  function lbRender() { var el = curG[cur]; lbImg.src = el.getAttribute('data-full'); var c = el.getAttribute('data-cap') || ''; lbCap.textContent = c; lbImg.alt = c; }
+  function step(s) { var v = visible(); var k = v.indexOf(curG[cur]); k = (k + s + v.length) % v.length; cur = curG.indexOf(v[k]); lbRender(); }
   function closeLb() { lb.hidden = true; d.body.style.overflow = ''; }
 
   /* ---------- filtros galería / tabla ---------- */
@@ -75,7 +75,7 @@
   var form = d.querySelector('#lead');
   if (form) {
     var q = new URLSearchParams(location.search).get('interes');
-    var sel = form.querySelector('#f-int'); if (q && sel && sel.querySelector('option[value="' + q + '"]')) sel.value = q;
+    var selF = form.querySelector('#f-int'); if (q && selF && selF.querySelector('option[value="' + q + '"]')) selF.value = q;
     form.addEventListener('submit', function (e) {
       e.preventDefault(); var ok = true;
       form.querySelectorAll('[required]').forEach(function (i) { var bad = !i.value.trim() || (i.type === 'email' && !/^\S+@\S+\.\S+$/.test(i.value)); i.setAttribute('aria-invalid', bad); if (bad) ok = false; });
