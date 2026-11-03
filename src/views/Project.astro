@@ -4,6 +4,7 @@ import Img from '../components/Img.astro';
 import Icon from '../components/Icon.astro';
 import Arrow from '../components/Arrow.astro';
 import Phero from '../components/Phero.astro';
+import Plan from '../components/Plan.astro';
 import { LOTS } from '../data/lots';
 import { useT, href, m2, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
@@ -44,9 +45,7 @@ const specs: [string, string, string, string, string][] = [
     <div class="sec-head split"><div><span class="eyebrow">{t('Conjunto', 'Site plan')}</span>
       <h2 class="h-l" style="margin-top:22px" set:html={t('Cinco fincas <b>disponibles</b>', 'Five lots <b>available</b>')} /></div>
       <p class="lead">{t('Las fincas FFM-IB-1, 2 y 3 corresponden a otras unidades y áreas de paso del condominio.', 'Lots FFM-IB-1, 2 and 3 are other units and right-of-way areas within the condominium.')}</p></div>
-    <figure class="mp-fig" data-lb="conj" data-full="/img/masterplan-lotes.webp" data-cap={t('Master plan de Cubo Park', 'Cubo Park master plan')}>
-      <img src="/img/masterplan-lotes.webp" srcset="/img/masterplan-lotes-sm.webp 900w, /img/masterplan-lotes.webp 2000w" sizes="100vw" width="2000" height="920" alt={t('Master plan de Cubo Park con las fincas disponibles', 'Cubo Park master plan with available lots')} loading="lazy" decoding="async" />
-    </figure>
+    <div style="margin-bottom:56px"><Plan lang={lang} selected="ib7" /></div>
     <div class="tbl-wrap tbl-dark"><table class="av">
       <thead><tr><th>{t('Finca', 'Lot')}</th><th>{t('Tipo', 'Type')}</th><th class="r">{t('Terreno', 'Land')}</th><th class="r">{t('Construcción', 'Built')}</th><th>{t('Estado', 'Status')}</th></tr></thead>
       <tbody>{Object.values(LOTS).map((v) => (
