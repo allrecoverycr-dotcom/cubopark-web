@@ -14,7 +14,8 @@ const other: Lang = lang === 'es' ? 'en' : 'es';
 const url = new URL(href(route, lang), SITE.domain).href;
 const urlEs = new URL(href(route, 'es'), SITE.domain).href;
 const urlEn = new URL(href(route, 'en'), SITE.domain).href;
-const ogImage = new URL(`/img/${image}.webp`, SITE.domain).href;
+// Imagen para compartir (WhatsApp, Facebook, LinkedIn): logo de Cubo Park en JPG 1200x630
+const ogImage = new URL('/og-cubopark.jpg', SITE.domain).href;
 const current = navKey || route;
 const wa = `https://wa.me/${SITE.contact.whatsapp}`;
 const lotsForJs = Object.fromEntries(Object.entries(LOTS).map(([k, v]) => [k, { ...v, url: href(`lot:${k}` as RouteKey, lang) }]));
@@ -45,6 +46,12 @@ const ld = [org, ...(jsonld ? (Array.isArray(jsonld) ? jsonld : [jsonld]) : [])]
   <meta property="og:description" content={description} />
   <meta property="og:url" content={url} />
   <meta property="og:image" content={ogImage} />
+  <meta property="og:image:secure_url" content={ogImage} />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Cubo Park Condominio" />
+  <meta name="twitter:image" content={ogImage} />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#161616" />
   <link rel="icon" type="image/png" href="/favicon.png" />
