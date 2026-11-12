@@ -259,7 +259,8 @@ table.av{width:100%;border-collapse:collapse;min-width:880px;font-variant-numeri
 .pricebox .v{font-size:clamp(2.2rem,3.4vw,3rem);font-weight:300;letter-spacing:-.02em;line-height:1}
 .pricebox .sub{font-size:.88rem;color:rgba(255,255,255,.7)}
 .pricebox hr{border:0;border-top:1px solid var(--line-d);margin:0}
-.pricebox .btn{width:100%}
+.pricebox>*{min-width:0}
+.pricebox .btn{width:100%;white-space:normal;text-align:center;justify-content:center;line-height:1.4}
 .facts{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--char)}
 .facts>div{padding:26px 18px 26px 0;border-bottom:1px solid var(--line-l)}
 .facts>div:not(:nth-child(3n)){border-right:1px solid var(--line-l)}
