@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /contacto.php
+
+Sitemap: https://cuboparkcr.com/sitemap-index.xml
