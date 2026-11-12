@@ -19,9 +19,9 @@ const total0 = Math.round(v.total!).toLocaleString('en-US');
 const contact = ask(lang, id, 'info');
 const visit = ask(lang, id, 'visita');
 const desc = isHouse
-  ? t('La finca FFM-IB-4 está a la entrada del condominio, con frente a la calle pública. Incluye una casa existente con jardines y árboles maduros. Por su ubicación funciona para oficinas corporativas, showroom con exhibición o un desarrollo industrial de frente a calle. El terreno se cotiza a $350 por m², más el valor de la casa.', 'Lot FFM-IB-4 sits at the condominium entrance, fronting the public street. It includes an existing house with mature gardens and trees. Its position suits corporate offices, a showroom or a street-front industrial development. The land is priced at $350 per m², plus the value of the house.')
-  : t(`La finca ${v.code} tiene ${m2(v.lot!)} de área útil con frente a la calle interna del condominio, más ${m2(v.green!)} de zona verde A.C.L.R. asignada (zona verde ${v.zv}). Está destinada a uso industrial, bodegas, ofibodegas y oficinas, con acceso directo a la infraestructura común.`,
-      `Lot ${v.code} has ${m2(v.lot!)} of usable area facing the condominium’s internal road, plus ${m2(v.green!)} of assigned A.C.L.R. green zone (green zone ${v.zv}). It is designated for industrial, warehouse, flex-space and office use, with direct access to the shared infrastructure.`);
+  ? t('La finca FFM-IB-4 está a la entrada del condominio, con frente a la calle pública. Incluye una casa existente con jardines y árboles maduros. Como el resto de las fincas, es apta para industria, bodegas y ofibodegas, con la ventaja del frente a la calle pública. El terreno se cotiza a $350 por m², más el valor de la casa.', 'Lot FFM-IB-4 sits at the condominium entrance, fronting the public street. It includes an existing house with mature gardens and trees. Like the other lots, it is suitable for industry, warehouses and office-warehouses, with the added benefit of public street frontage. The land is priced at $350 per m², plus the value of the house.')
+  : t(`La finca ${v.code} tiene ${m2(v.lot!)} de área útil con frente a la calle interna del condominio, más ${m2(v.green!)} de zona verde A.C.L.R. asignada (zona verde ${v.zv}). Es apta para industria, bodegas y ofibodegas, con acceso directo a la infraestructura común.`,
+      `Lot ${v.code} has ${m2(v.lot!)} of usable area facing the condominium’s internal road, plus ${m2(v.green!)} of assigned A.C.L.R. green zone (green zone ${v.zv}). It is suitable for industry, warehouses and office-warehouses, with direct access to the shared infrastructure.`);
 const kind = isHouse ? t('Terreno y casa', 'Land & house') : t('Lote industrial', 'Industrial lot');
 const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: `${v.code} · Cubo Park`, price: v.price, priceCurrency: 'USD', url: SITE.domain + href(`lot:${id}`, lang),
   itemOffered: { '@type': 'Place', name: v.code, address: { '@type': 'PostalAddress', addressLocality: 'San Rafael', addressRegion: 'Alajuela', addressCountry: 'CR' },
@@ -48,11 +48,11 @@ const ld = { '@context': 'https://schema.org', '@type': 'Offer', name: `${v.code
           <div><div class="v">{m2(v.total!)}</div><div class="k">{t('Área total', 'Total area')}</div></div>
           <div><div class="v">{money(ppm(v))}</div><div class="k">{t('Precio por m² (área total)', 'Price per m² (total area)')}</div></div>
         </>)}
-        <div><div class="v">{t('Industrial', 'Industrial')}</div><div class="k">{t('Uso', 'Use')}</div></div>
+        <div><div class="v sm">{t('Industria, bodegas y ofibodegas', 'Industry, warehouses, office-warehouses')}</div><div class="k">{t('Apta para', 'Suitable for')}</div></div>
         <div><div class="v">{isHouse ? t('Calle pública', 'Public street') : t('Calle interna', 'Internal road')}</div><div class="k">{t('Frente', 'Frontage')}</div></div>
       </div></div>
       <div class="block"><h2>{t('Descripción', 'Overview')}</h2><div class="prose"><p>{desc}</p>
-        <p>{t('Usos permitidos según el plano catastrado: industrial, bodegas, ofibodegas y oficinas.', 'Permitted uses per the cadastral survey: industrial, warehouses, flex space and offices.')}</p></div></div>
+        <p>{t('Apta para industria, bodegas y ofibodegas.', 'Suitable for industry, warehouses and office-warehouses.')}</p></div></div>
       {v.green ? (
         <div class="block"><h2>{t('Composición del área', 'Area breakdown')}</h2>
           <div class="bar"><span class="a" style={`width:${pct.toFixed(2)}%`}></span><span class="b" style={`width:${(100 - pct).toFixed(2)}%`}></span></div>

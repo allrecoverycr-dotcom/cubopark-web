@@ -600,3 +600,5 @@ table.av{min-width:0}
 /* El título y el texto principal del hero se desplazan sin desvanecerse: se pintan desde el primer cuadro (no retrasan el LCP). */
 .hero h1.hero-in,.hero .lead.hero-in{animation-name:heroSlide}
 @keyframes heroSlide{from{transform:translateY(18px)}to{transform:none}}
+
+.facts .v.sm{font-size:clamp(1.05rem,1.5vw,1.25rem);line-height:1.3}
