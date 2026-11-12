@@ -25,6 +25,8 @@ const org = {
   logo: SITE.domain + '/img/logo-color.png', image: SITE.domain + '/img/vista-lateral.webp',
   address: { '@type': 'PostalAddress', streetAddress: SITE.address.street, addressLocality: SITE.address.locality, addressRegion: SITE.address.region, addressCountry: SITE.address.country },
   areaServed: 'Costa Rica',
+  geo: { '@type': 'GeoCoordinates', latitude: SITE.geo.lat, longitude: SITE.geo.lng },
+  hasMap: SITE.maps,
   ...(C.phone ? { telephone: C.phone } : {}), ...(C.email ? { email: C.email } : {}),
 };
 const BUILD = Date.now().toString(36);

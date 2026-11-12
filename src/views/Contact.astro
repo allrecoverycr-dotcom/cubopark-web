@@ -58,7 +58,8 @@ const kinds: [string, string, string][] = [['info', 'Solicitar información', 'R
       <div class="it"><span class="k">{t('Dirección', 'Address')}</span><span class="v">Calle Potrerillos, San Rafael, Alajuela, Costa Rica</span></div>
       <div class="it" style="border:0;padding:0"><span class="k">{t('Visitas', 'Visits')}</span><span class="v sm">{t('Las visitas se coordinan previamente. Envíe su solicitud y le proponemos fecha y hora.', 'Visits are arranged in advance. Send your request and we will propose a date and time.')}</span></div>
       {wa && <a class="btn btn-red" href={wa} target="_blank" rel="noopener">{t('Escribir por WhatsApp', 'Message on WhatsApp')}</a>}
-      <a class="btn btn-ghost" href={SITE.maps} target="_blank" rel="noopener">{t('Ver en Google Maps', 'View on Google Maps')}</a>
+      <a class="btn btn-ghost" href={SITE.maps} target="_blank" rel="noopener">{t('Cómo llegar · Google Maps', 'Directions · Google Maps')}</a>
+      <a class="btn btn-ghost" href={SITE.waze} target="_blank" rel="noopener">Waze</a>
       <a class="link-arrow on-d" href={href('availability', lang)}>{t('Ver precios y disponibilidad', 'See prices and availability')} <Arrow /></a>
     </aside>
   </div></section>

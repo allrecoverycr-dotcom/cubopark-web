@@ -21,8 +21,9 @@ const acc: [string, string, string][] = [['Radial Lindora', 'Radial Lindora', ''
     <div class="rv"><span class="eyebrow">{t('Dirección', 'Address')}</span>
       <p class="addr" style="margin-top:22px">Cubo Park Condominio<br />Calle Potrerillos, San Rafael<br />Alajuela, Costa Rica</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:34px">
-        <a class="btn btn-red" href={SITE.maps} target="_blank" rel="noopener">{t('Abrir en Google Maps', 'Open in Google Maps')} <Arrow /></a>
-        <a class="btn btn-ghost" href={SITE.waze} target="_blank" rel="noopener">Waze</a></div></div>
+        <a class="btn btn-red" href={SITE.maps} target="_blank" rel="noopener">{t('Cómo llegar · Google Maps', 'Directions · Google Maps')} <Arrow /></a>
+        <a class="btn btn-ghost" href={SITE.waze} target="_blank" rel="noopener">Waze</a>
+        <a class="btn btn-ghost" href={SITE.view360} target="_blank" rel="noopener">{t('Vista aérea 360°', '360° aerial view')}</a></div></div>
     <div class="rv"><span class="eyebrow">{t('Conexiones', 'Connections')}</span>
       <div class="access num" style="margin-top:22px">{acc.map(([es, en, min]) => <div><span>{t(es, en)}</span>{min && <span>{min}</span>}</div>)}</div></div>
   </div></section>
